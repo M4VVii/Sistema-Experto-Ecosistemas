@@ -100,7 +100,7 @@ El sistema experto expone los siguientes *endpoints* HTTP:
 * **Frontend:** Alojado como sitio estático en Vercel, realizando peticiones mediante Fetch API al backend contenerizado.
 
 ## 10. Pruebas y Validación
-El sistema ha sido validado contra más de 10 casos de prueba rigurosos (positivos, negativos, y de límites). La documentación completa de las pruebas en consola e interfaz pública se encuentra en:
+El sistema ha sido validado contra más de 10 casos de prueba rigurosos (positivos, negativos, y de límites). La documentación completa de las pruebas en consola e interfaz pública se encuentra en:  
 👉 [docs/casos_de_prueba.md](docs/casos_de_prueba.md)
 
 ## 11. Declaración de Uso de Inteligencia Artificial
