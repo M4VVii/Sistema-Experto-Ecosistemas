@@ -1,0 +1,22 @@
+# Sistema / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secretos y configuración local
+.env
+.env.*
+*.pem
+*.key
+
+# Dependencias y build del frontend (Para Node/React)
+node_modules/
+dist/
+build/
+.vercel/
+
+# Archivos temporales de SWI-Prolog y logs
+*.qlf
+*.log
+.swipl_history
