@@ -17,8 +17,8 @@
     |                                                                            |
     |   ARQUITECTURA Y DISEÑO LÓGICO DEL MOTOR DE INFERENCIA, osea las REGLAS):  |
     |                                                                            |
-    |   1. Carga Automática: Importación automática de hechos mediante la        |
-    |      directiva :- ensure_loaded(hechos).                                   |
+    |   1. Carga Automática: Importación automática de hechos mediante:          |
+    |      :- ensure_loaded(hechos).                                             |
     |                                                                            |
     |   2. Abstracción por Accesores: Encapsulamiento de la aridad de            |
     |      especie/12 para aislar las reglas de cambios estructurales en la BD.  |
@@ -32,10 +32,6 @@
     |                                                                            |
     |   5. Normalización de Espacio: Patrón de emparejamiento sobre functores    |
     |      litros/1, cm2/1 y litros_y_cm2/2 para acumulados de hacinamiento.     |
-    |                                                                            |
-    |   6. Organización y Diagnóstico: Arquitectura declarativa con              |
-    |      registro de reglas y metacontrol (call/N, findall/3) para generar     |
-    |      explicaciones detalladas de conflicto de forma desacoplada.           |
     |____________________________________________________________________________|
 */
 
@@ -186,59 +182,3 @@ conflicto_hacinamiento(ListaEspecies, tanque(_, CapacidadTanque)) :-
     
     % 4. Hay conflicto si los litros/área requerido son mayores a los del tanque
     (TotalLitrosReq > TanqueLitros ; TotalAreaReq > TanqueArea).
-
-
-% ORGANIZADOR CENTRAL Y DIAGNÓSTICO
-
-% Generador de combinaciones únicas. 
-% Parte la lista original para extraer dos especies distintas (E1 y E2).
-% Evita que Prolog compare a un pez consigo mismo (A,A) o que duplique 
-% evaluaciones invirtiendo el orden (evaluar A,B y luego B,A).
-pareja_de_lista(E1, E2, Lista) :-
-    append(_, [E1 | Resto], Lista),
-    member(E2, Resto).
-
-% Catálogo del sistema experto (Base de conocimiento).
-% Define qué reglas existen, de qué tipo son y qué mensaje de error lanzan.
-% Las reglas nuevas, solo se anotan aquí y el sistema la integra.
-regla(par, conflicto_territorial_agresion, 'Conflicto por agresion o territorialidad').
-regla(par, conflicto_termico, 'Incompatibilidad de temperatura').
-regla(par, conflicto_quimico, 'Incompatibilidad de pH o humedad').
-regla(par, conflicto_depredacion, 'Riesgo de depredacion').
-regla(individual, conflicto_habitat, 'Especie incompatible con el tipo de tanque').
-regla(global, conflicto_hacinamiento, 'Falta de espacio (Hacinamiento)').
-
-% Evaluador. Usa "call" para ejecutar reglas a partir de su nombre.
-% Caso 1: Reglas de pares (evalúan especies de dos en dos).
-evaluar_conflicto(Lista, _, NombreRegla, involucrados(E1, E2)) :-
-    regla(par, NombreRegla, _),
-    pareja_de_lista(E1, E2, Lista),
-    call(NombreRegla, E1, E2). % Ejecuta dinámicamente la regla almacenada en la variable NombreRegla.
-
-% Caso 2: Reglas individuales (evalúan una especie contra el entorno).
-evaluar_conflicto(Lista, Tanque, NombreRegla, involucrados(E1)) :-
-    regla(individual, NombreRegla, _),
-    member(E1, Lista),
-    call(NombreRegla, E1, Tanque).
-
-% Caso 3: Reglas globales (evalúan toda la lista junta, como el hacinamiento).
-evaluar_conflicto(Lista, Tanque, NombreRegla, involucrados(todos)) :-
-    regla(global, NombreRegla, _),
-    call(NombreRegla, Lista, Tanque).
-
-% Recolector de errores.
-% findall ejecuta evaluar_conflicto repetidamente hasta agotar las combinaciones,
-% guardando cada fallo (Mensaje + Involucrados) en la lista ConflictosBrutos.
-% sort elimina cualquier error duplicado y entrega la ListaConflictos limpia.
-diagnostico(Lista, Tanque, ListaConflictos) :-
-    findall(
-        conflicto(Mensaje, Involucrados),
-        (evaluar_conflicto(Lista, Tanque, Regla, Involucrados), regla(_, Regla, Mensaje)),
-        ConflictosBrutos
-    ),
-    sort(ConflictosBrutos, ListaConflictos).
-
-% Regla de viabilidad.
-% El ecosistema es viable ÚNICAMENTE SI el evaluador de conflictos no logra encontrar ningún error.
-ecosistema_viable(ListaEspecies, Tanque) :-
-    \+ evaluar_conflicto(ListaEspecies, Tanque, _, _).
