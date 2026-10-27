@@ -1,0 +1,528 @@
+/* Variables de color basadas en tu paleta bioluminiscente */
+:root {
+    /* Fondo más transparente para que resalte la flor trasera */
+    --fondo-cristal: rgba(20, 15, 30, 0.35); 
+    --borde-cristal: rgba(255, 255, 255, 0.2);
+    /* Colores inspirados en los pétalos iridiscentes de tu foto */
+    --brillo-principal: #d884ff; /* Lila/Rosa brillante */
+    --brillo-secundario: #60e5ff; /* Azul celeste suave */
+    --texto-claro: #f0f4f8;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: var(--texto-claro);
+    overflow-x: hidden;
+}
+
+/* 1. Fondo del océano con desenfoque y oscurecimiento */
+.fondo-oceano {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('imagenes/fondo.jpg'); /* Ruta a la foto que guardaste */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* 
+       Aquí está la magia: 
+       - blur(5px) desenfoca lo suficiente para que el texto sea legible pero las flores se sigan distinguiendo.
+       - brightness(0.35) la oscurece un 65% para que tus letras brillen encima.
+       - contrast(1.1) le da un pequeño extra de contraste para que lo bioluminiscente siga vivo en la oscuridad.
+    */
+    filter: blur(5px) brightness(0.35) contrast(1.1); 
+    
+    z-index: -1; /* Asegura que se quede atrás de todo */
+    transform: scale(1.05); /* Evita que se vean bordes blancos por el desenfoque */
+}
+
+/* 2. Barra de Navegación */
+.barra-navegacion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(10, 25, 47, 0.5);
+    border-bottom: 1px solid var(--borde-cristal);
+    backdrop-filter: blur(10px);
+}
+
+.titulo-y2k {
+    font-family: 'Abril Fatface', serif;
+    font-size: 2.8rem; 
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    
+    /* 1. Colores más suaves y desaturados */
+    background: linear-gradient(90deg, #4ca6b8 0%, #853bb5 35%, #cc859a 70%, #cca329 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    
+    /* 2. Borde blanco más delgado y semitransparente */
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
+    
+    /* 3. Resplandor exterior mucho más sutil */
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+}
+
+nav a {
+    color: var(--texto-claro);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+nav a:hover {
+    color: var(--brillo-purpura);
+    text-shadow: 0 0 8px var(--brillo-purpura);
+}
+
+/* 3. Cuadrícula Principal (Las 3 columnas de tu boceto) */
+.contenedor-grid {
+    display: grid;
+    /* Anchos exactos e inamovibles: Izquierda, Centro, Derecha */
+    grid-template-columns: 380px 250px 450px; 
+    justify-content: center; /* Centra todo el bloque en el monitor */
+    gap: 40px;
+    padding: 40px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    align-items: start;
+}
+
+/* Candado para evitar que las cajas rompan el ancho asignado */
+.caja-cristal, .burbuja-error {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Diseño y animación del icono de carga */
+.espiral-carga {
+    font-size: 7.5rem; /* Tamaño grande */
+    text-shadow: 0 0 20px var(--brillo-secundario);
+    animation: resplandor 1.5s ease-in-out infinite; /* Parpadeo nítido */
+}
+
+@keyframes resplandor {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); text-shadow: 0 0 40px var(--brillo-secundario); }
+}
+
+/* Estilo general para las cajas con esquinas redondeadas */
+.caja-cristal {
+    background: var(--fondo-cristal);
+    border: 1px solid var(--borde-cristal);
+    border-radius: 20px;
+    padding: 30px; /* Mayor margen interno para que no se vea apretado */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px); /* Efecto de vidrio esmerilado */
+}
+
+/* Layout específico de las columnas */
+/* Candado mágico para que el contenido no deforme las columnas */
+.columna-izq, .columna-centro, .columna-der {
+    width: 100%;
+    min-width: 0; 
+}
+
+.columna-izq {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.columna-centro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-top: 150px; 
+}
+
+.columna-der {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+/* Asegurar que la burbuja no se desborde del centro */
+.zona-dinamica-centro {
+    min-height: 160px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.recuadro-resultados {
+    width: 100%;
+    min-height: 400px;
+}
+
+/* Corrección del fondo por si la imagen no carga */
+body {
+    background-color: #050b14; /* Azul muy oscuro de respaldo */
+}
+
+/* 4. Estilo de Botones Bioluminiscentes */
+.btn-bioluminiscente {
+    background: transparent;
+    color: var(--brillo-secundario);
+    border: 2px solid var(--brillo-secundario);
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(96, 229, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-bioluminiscente:hover {
+    background: var(--brillo-secundario);
+    color: #050b14;
+    box-shadow: 0 0 20px var(--brillo-secundario), 0 0 40px var(--brillo-secundario);
+    transform: scale(1.05);
+}
+
+.btn-secundario {
+    color: var(--brillo-principal);
+    border-color: var(--brillo-principal);
+    box-shadow: 0 0 10px rgba(216, 132, 255, 0.2);
+}
+
+.btn-secundario:hover {
+    background: var(--brillo-principal);
+    color: #050b14;
+    box-shadow: 0 0 20px var(--brillo-principal), 0 0 40px var(--brillo-principal);
+}
+
+/* 5. Estilo del Input de Litros */
+input[type="number"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--borde-cristal);
+    color: var(--brillo-cyan);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    margin-left: 10px;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+input[type="number"]:focus {
+    border-color: var(--brillo-cyan);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+/* Placeholder (texto de ejemplo) */
+input[type="number"]::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Contenedor principal de las especies con scroll */
+.contenedor-especies {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.contenedor-especies h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--brillo-secundario);
+}
+
+/* Cuadrícula adaptable */
+.tarjetas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Tarjeta individual */
+.tarjeta-especie {
+    background: rgba(10, 25, 47, 0.6);
+    border: 2px solid var(--borde-cristal);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tarjeta-especie img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+
+.tarjeta-especie span {
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--texto-claro);
+}
+
+/* Efectos al pasar el ratón y al hacer clic (Seleccionada) */
+.tarjeta-especie:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.tarjeta-especie.seleccionada {
+    border-color: var(--brillo-principal);
+    background: rgba(216, 132, 255, 0.15);
+    box-shadow: 0 0 15px var(--brillo-principal);
+}
+
+/* Diseño de la barra de desplazamiento (Scrollbar) */
+::-webkit-scrollbar {
+    width: 8px; 
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(243, 156, 113, 0.3); 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--brillo-secundario); 
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--brillo-secundario); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brillo-principal); 
+}
+
+/* Diseño de la burbuja de error */
+.burbuja-error {
+    background: rgba(255, 0, 85, 0.15);
+    border: 1px solid #ff0055;
+    color: #ffb3c6;
+    padding: 12px 15px;
+    border-radius: 25px;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+    backdrop-filter: blur(10px);
+    font-size: 0.9rem;
+    text-align: center;
+    animation: flotar 2s ease-in-out infinite;
+    width: 100%; /* Toma solo el ancho de su columna */
+    box-sizing: border-box;
+}
+
+/* Estrella animada central */
+.estrella-animada {
+    font-size: 7.5rem;
+    animation: aparecer-estrella 0.5s ease-out forwards, flotar 2s ease-in-out infinite;
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes aparecer-estrella {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Estilo del menú desplegable de ecosistemas */
+.input-desplegable {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--borde-cristal);
+    color: var(--brillo-secundario);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.input-desplegable:focus {
+    border-color: var(--brillo-secundario);
+    box-shadow: 0 0 10px rgba(96, 229, 255, 0.3);
+}
+
+/* Color de fondo oscuro para las opciones al desplegar */
+.input-desplegable option {
+    background: #050b14;
+    color: var(--texto-claro);
+}
+
+/* --- Ventanas Modales --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(5, 11, 20, 0.85); /* Fondo oscuro semitransparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+.modal-contenido {
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 40px;
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 2.5rem;
+    color: var(--brillo-secundario);
+    cursor: pointer;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.cerrar-modal:hover {
+    color: var(--brillo-principal);
+    text-shadow: 0 0 15px var(--brillo-principal);
+}
+
+.texto-teorico {
+    margin-top: 20px;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: var(--texto-claro);
+}
+
+.texto-teorico p {
+    margin-bottom: 15px;
+}
+
+/* Estilos para la lista del catálogo de especies */
+.lista-especies {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.fila-especie {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(10, 25, 47, 0.5);
+    border: 1px solid var(--borde-cristal);
+    border-radius: 12px;
+    padding: 15px;
+    transition: background 0.3s;
+}
+
+.fila-especie:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.fila-especie img {
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--brillo-secundario);
+}
+
+.info-especie {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-especie h3 {
+    margin: 0;
+    color: var(--brillo-secundario);
+    font-size: 1.2rem;
+}
+
+.info-especie p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--texto-claro);
+}
+
+.info-especie strong {
+    color: #fff;
+}
+
+/* Estilos para el Manual de Usuario */
+.pasos-manual {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.paso {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(10, 25, 47, 0.4);
+    border: 1px solid var(--borde-cristal);
+    padding: 15px 25px;
+    border-radius: 12px;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.paso:hover {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 15px rgba(96, 229, 255, 0.1);
+}
+
+.numero-paso {
+    font-family: 'Abril Fatface', serif;
+    font-size: 3rem;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--brillo-principal);
+    filter: drop-shadow(0 0 10px var(--brillo-principal));
+    min-width: 50px;
+    text-align: center;
+}
+
+.detalle-paso h3 {
+    margin: 0 0 5px 0;
+    color: var(--brillo-secundario);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.detalle-paso p {
+    margin: 0;
+    color: var(--texto-claro);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}

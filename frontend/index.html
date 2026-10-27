@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquitecto de <br>Ecosistemas</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Fuentes: Chewy para el título  y Poppins para los textos -->
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="fondo-oceano"></div>
+    
+    <header class="barra-navegacion">
+        <h1 class="titulo-y2k">Arquitecto de ecosistemas</h1>
+       <nav>
+    <ul>
+        <li><a href="#" id="link-inicio">Simulador de Hábitat</a></li>
+        <li><a href="#" id="link-especies">Enciclopedia de especies</a></li>
+        <li><a href="#" id="link-manual">Guía Rápida</a></li>
+    </ul>
+</nav>
+    </header>
+
+    <main class="contenedor-grid">
+        <!-- Columna Izquierda -->
+        <section class="columna-izq">
+    <!-- Caja 1: Tipo de Ecosistema -->
+    <div class="caja-cristal">
+        <label for="tipo-habitat">Tipo de ecosistema:</label>
+        <select id="tipo-habitat" class="input-desplegable">
+            <option value="" disabled selected>Selecciona un hábitat...</option>
+            <option value="acuatico">Acuático (Acuario)</option>
+            <option value="terrestre_tropical">Terrestre Tropical</option>
+            <option value="terrestre_desertico">Terrestre Desértico</option>
+            <option value="mixto">Mixto (Paludario)</option>
+        </select>
+    </div>
+
+    <!-- Caja 2: Litros de agua -->
+    <div class="caja-cristal">
+        <label for="litros">Litros de agua:</label>
+        <input type="number" id="litros" min="1" placeholder="Ej. 120">
+    </div>
+    
+    <!-- Caja 3: Especies -->
+    <div class="caja-cristal contenedor-especies">
+        <h3>Selecciona las especies:</h3>
+        <div id="cuadricula" class="tarjetas-grid">
+            <!-- JavaScript inyectará las tarjetas aquí -->
+        </div>
+    </div>
+</section>
+
+        <!-- Columna Central -->
+        <section class="columna-centro">
+    <!-- Zona dinámica encima del botón -->
+    <div class="zona-dinamica-centro">
+        <!-- Burbuja de error -->
+        <div id="error-msg" class="burbuja-error" style="display: none;"></div>
+        
+        <!-- Espiral de carga -->
+        <div id="cargando" class="espiral-carga" style="display: none;">🌀</div>
+        
+        <!-- Estrella de resultado -->
+        <div id="estrella-resultado" class="estrella-animada" style="display: none;"></div>
+    </div>
+
+    <!-- Botón desplazado hacia abajo -->
+    <button id="btn-evaluar" class="btn-bioluminiscente">Evaluar</button>
+</section>
+
+        <!-- Columna Derecha -->
+        <section class="columna-der">
+            <button id="btn-limpiar" class="btn-bioluminiscente btn-secundario">Nueva Consulta</button>
+            <div class="caja-cristal recuadro-resultados">
+                <h2>Resultados</h2>
+                <div id="resultados-contenido" style="display: none;">
+                    <h3 id="veredicto"></h3>
+                    <p id="mensaje"></p>
+                    <ul id="razones"></ul>
+                    <ul id="sugerencias"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Modal: Acerca de las especies -->
+<div id="modal-especies" class="modal-overlay" style="display: none;">
+    <div class="caja-cristal modal-contenido">
+    <span class="cerrar-modal" id="cerrar-especies">&times;</span>
+    <h2 class="titulo-y2k" style="font-size: 2rem;">Enciclopedia de especies</h2>
+    
+    <!-- Contenedor vacío donde JS inyectará la información -->
+    <div id="lista-especies-modal" class="lista-especies"></div>
+</div>
+</div>
+
+<!-- Modal: Manual de usuario -->
+<div id="modal-manual" class="modal-overlay" style="display: none;">
+    <div class="caja-cristal modal-contenido">
+        <span class="cerrar-modal" id="cerrar-manual">&times;</span>
+        <h2 class="titulo-y2k" style="font-size: 2rem;">Guía Rápida</h2>
+        <div class="pasos-manual">
+    <div class="paso">
+        <div class="numero-paso">1</div>
+        <div class="detalle-paso">
+            <h3>Selecciona el entorno</h3>
+            <p>Abre el menú desplegable y define el tipo de hábitat de tu recinto (Acuario, Terrario Tropical, Terrario Desértico o Paludario mixto).</p>
+        </div>
+    </div>
+
+    <div class="paso">
+        <div class="numero-paso">2</div>
+        <div class="detalle-paso">
+            <h3>Ingresa el volumen</h3>
+            <p>Escribe la capacidad total de tu tanque en litros. El sistema calculará si el espacio es suficiente para evitar el hacinamiento.</p>
+        </div>
+    </div>
+
+    <div class="paso">
+        <div class="numero-paso">3</div>
+        <div class="detalle-paso">
+            <h3>Elige los organismos</h3>
+            <p>Haz clic en las tarjetas de la cuadrícula para seleccionar al menos dos especies. Las tarjetas seleccionadas se iluminarán.</p>
+        </div>
+    </div>
+
+    <div class="paso">
+        <div class="numero-paso">4</div>
+        <div class="detalle-paso">
+            <h3>Evalúa la convivencia</h3>
+            <p>Presiona "Evaluar". El sistema revisará automáticamente si las especies pueden vivir juntos en paz, comprobando que compartan el mismo clima, tengan espacio suficiente y no corran peligro entre ellos.</p>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+</body>
+</html>
