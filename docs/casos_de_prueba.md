@@ -1,4 +1,4 @@
-# Casos de Prueba — Arquitecto de Ecosistemas Acuáticos
+# Casos de Prueba — Arquitecto de Ecosistemas
 
 **Proyecto:** Sistema experto en Prolog para evaluar la convivencia de especies en un mismo hábitat.  
 
@@ -172,9 +172,9 @@ Los resultados esperados de este documento se calcularon con los siguientes crit
 
 > **Evidencia:** [Insertar captura de pantalla de la evaluación en Prolog o Interfaz Web aquí]
 
-## Notas finales
+## Notas
 
-* Estos casos validan la **lógica del sistema sobre los datos de la base de conocimientos**. No sustituyen el criterio de un veterinario o un acuarista experto.
+* Estos casos validan la **lógica del sistema sobre los datos de la base de conocimientos**. No sustituyen el criterio de un acuaterariófilo experto.
 * Los casos 2 y 3 salen viables según los parámetros de los hechos, pero en la práctica se desaconseja mezclar anfibios con reptiles o con peces en un mismo recinto debido a las toxinas cutáneas, patógenos y estrés. Ya que este proyecto tiene limitaciónes,porque solo considera temperatura, pH, humedad, espacio, tamaño y temperamento.
 * Cada caso aísla **un solo motivo de rechazo** para que, si una prueba falla, sea fácil identificar qué parte de las reglas la causó.
 * Los volúmenes y dimensiones del tanque son ejemplos, lo que importa para la prueba es el volumen en litros.

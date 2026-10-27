@@ -42,7 +42,7 @@
 */
 
 /*
-ESTRUCTURA DE HECHOS:
+ESTRUCTURA DE LOS HECHOS PARA ESPECIE/12:
     especie(id_nombre, clase, tipo_habitat, temp_min, temp_max, ph_min, ph_max,
             humedad_min, humedad_max, requerimiento_espacio, tamano_max_cm, temperamento).
 */
