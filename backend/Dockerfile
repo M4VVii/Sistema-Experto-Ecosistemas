@@ -1,5 +1,5 @@
-# 1. Utiliza la imagen oficial y preconfigurada de SWI-Prolog
-FROM swipl:latest
+# 1. Utiliza la imagen oficial de SWI-Prolog con la versión fijada (para evitar problemas de compatibilidad)
+FROM swipl:9.0.4
 
 # 2. Crea una carpeta llamada 'app' dentro del servidor de Render
 WORKDIR /app

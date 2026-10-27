@@ -1,7 +1,13 @@
+<div align="center">
+
 # 🌍 Sistema Experto: Arquitecto de Ecosistemas (Acuarios, Terrarios y Paludarios)
 
 **Práctica integradora 1er Parcial - Paradigmas de Programación**  
 **Escuela Superior de Cómputo (ESCOM) - IPN**
+
+</div>
+
+<div align="justify">
 
 ## 1. Descripción del Proyecto y Problema que Resuelve
 El **Arquitecto de Ecosistemas** es un sistema experto basado en programación lógica (Prolog) diseñado para prevenir desastres biológicos en entornos cerrados. 
@@ -20,7 +26,7 @@ El **Arquitecto de Ecosistemas** es un sistema experto basado en programación l
 ## 4. Arquitectura del Sistema
 El sistema separa claramente la capa de presentación de la capa de razonamiento lógico:
 
-1. **Frontend (Vercel):** Interfaz web ligera en HTML/CSS/JS puro. Captura los parámetros del hábitat y las especies deseadas.
+1. **Frontend (GitHub Pages / Vercel):** Interfaz web ligera en HTML/CSS/JS puro. Captura los parámetros del hábitat y las especies deseadas.
 2. **Capa de Integración (API HTTP):** El servidor embebido de SWI-Prolog recibe la petición en formato JSON y la traduce a predicados lógicos, previniendo inyección de código.
 3. **Motor de Inferencia (Render/Docker):** Los archivos `.pl` evalúan las reglas (unificación y backtracking) para encontrar conclusiones y generar una respuesta justificada.
 
@@ -32,9 +38,11 @@ El sistema separa claramente la capa de presentación de la capa de razonamiento
  ┃ ┃ ┣ 📜 hechos.pl          # Base de conocimientos (Especies, parámetros)
  ┃ ┃ ┣ 📜 reglas.pl          # Reglas lógicas de compatibilidad e inferencia
  ┃ ┃ ┗ 📜 consultas.pl       # Predicados de entrada para la API
+ ┃ ┣ 📜 .dockerignore        # Exclusiones para el contenedor
  ┃ ┣ 📜 servidor.pl          # Servidor HTTP/JSON de Prolog
  ┃ ┗ 📜 Dockerfile           # Contenedor para despliegue
  ┣ 📂 frontend/ 
+ ┃ ┣ 📂 imagenes/            # Recursos visuales (.webp/.jpg)
  ┃ ┣ 📜 index.html           # Interfaz de usuario
  ┃ ┣ 📜 styles.css           # Estilos de la interfaz
  ┃ ┣ 📜 app.js               # Lógica de cliente y Fetch API
@@ -45,7 +53,8 @@ El sistema separa claramente la capa de presentación de la capa de razonamiento
  ┃ ┗ 📜 documento_tecnico.md # Entregable escrito
  ┣ 📜 .gitignore             # Exclusión de archivos basura
  ┗ 📜 README.md              # Documentación principal
- ```
+```
+
 ## 6. Instalación y Ejecución Local
 
 **Requisitos Previos:**
@@ -56,37 +65,33 @@ El sistema separa claramente la capa de presentación de la capa de razonamiento
 1. Clonar el repositorio: `git clone https://github.com/M4VVii/Sistema-Experto-Ecosistemas.git`
 2. Levantar el motor lógico (Backend):
    * Navegar a la carpeta `backend/`
-   * Ejecutar: `swipl servidor.pl`
-   * El servidor iniciará en `http://localhost:8080`
+   * Ejecutar: `swipl -s servidor.pl -g "iniciar_servidor."`
+   * El servidor iniciará por defecto en `http://localhost:8000`
 3. Levantar la interfaz (Frontend):
    * Abrir el archivo `frontend/index.html` en cualquier navegador web. Alternativamente, usar un servidor local como *Live Server* en VS Code.
 
 ## 7. Documentación de la API
-El sistema experto expone los siguientes *endpoints* HTTP:
+El sistema experto expone el siguiente *endpoint* HTTP principal para la evaluación lógica:
 
-* `GET /salud`: Verifica el estado del servidor.
-* `GET /api/especies`: Devuelve la lista de especies disponibles (leídas directamente de los hechos lógicos).
 * `POST /api/evaluar`: Ejecuta el motor de inferencia.
 
-**Ejemplo de Petición:**
+**Ejemplo de Petición (JSON enviado por la UI):**
 ```json
 {
-  "habitat": "paludario",
-  "litros_agua": 120,
-  "cm2_tierra": 600,
-  "especies": ["pez_guppy", "rana_flecha"]
+  "especies": ["pez_guppy", "rana_flecha"],
+  "tanque_tipo": "mixto",
+  "tanque_capacidad": 120
 }
 ```
 
-**Ejemplo de Respuesta:**
+**Ejemplo de Respuesta (Generada por Prolog):**
 ```json
 {
-  "veredicto": "conflicto_parametros",
-  "razones": [
+  "viable": false,
+  "conflictos": [
     {
-      "regla": "incompatibilidad_ph",
-      "especies": ["pez_guppy", "rana_flecha"],
-      "detalle": "Los rangos de pH no tienen intersección viable."
+      "mensaje": "Incompatibilidad detectada por pH o temperatura",
+      "involucrados": "involucrados(pez_guppy, rana_flecha)"
     }
   ]
 }
@@ -96,15 +101,15 @@ El sistema experto expone los siguientes *endpoints* HTTP:
 * *(Sección en construcción: Se agregarán capturas del backtracking de SWI-Prolog en la consola y respuestas de la interfaz durante la Fase 1 y 3)*.
 
 ## 9. Procedimiento de Despliegue
-* **Backend:** Contenerizado con Docker (`Dockerfile`) y desplegado como Web Service en plataformas compatibles con contenedores (Render / Railway).
-* **Frontend:** Alojado como sitio estático en Vercel, realizando peticiones mediante Fetch API al backend contenerizado.
+* **Backend:** Contenerizado con Docker (`Dockerfile`) y desplegado como Web Service en la nube de Render.
+* **Frontend:** Alojado como sitio estático, realizando peticiones mediante Fetch API al backend contenerizado.
 
 ## 10. Pruebas y Validación
 El sistema ha sido validado contra 10 casos de prueba rigurosos (positivos, negativos, y de límites). La documentación completa de las pruebas en consola e interfaz pública se encuentra en:  
 👉 [docs/casos_de_prueba.md](docs/casos_de_prueba.md)
 
 ## 11. Declaración de Uso de Inteligencia Artificial
-En estricto cumplimiento de las reglas de integridad académica, **ningún hecho, regla lógica o predicado del motor de inferencia en `.pl` ha sido generado o reescrito por IA**. Las herramientas de Inteligencia Artificial (Claude, Gemini) se utilizaron de manera asistida y declarada exclusivamente para: Estructurar, apoyar en comandos de Git, redactar el Dockerfile y orientar en el uso de la Fetch API de JavaScript.
+En estricto cumplimiento de las reglas de integridad académica, **ningún hecho, regla lógica o predicado del motor de inferencia en `.pl` ha sido generado o reescrito por IA**. Las herramientas de Inteligencia Artificial se utilizaron de manera asistida y declarada exclusivamente para: Estructurar la arquitectura, apoyar en comandos de Git, redactar el Dockerfile, configurar el servidor HTTP nativo en Prolog y orientar en el uso de la Fetch API de JavaScript.
 
 ## 12. Referencias
 * [Documentación oficial de SWI-Prolog](https://www.swi-prolog.org/pldoc/doc_for?object=manual)
@@ -121,3 +126,5 @@ En estricto cumplimiento de las reglas de integridad académica, **ningún hecho
 ---
 
 ***Repositorio mantenido por MAVV y NISO.*** 🫰
+
+</div>

@@ -14,16 +14,14 @@ body {
     font-family: 'Poppins', sans-serif;
     color: var(--texto-claro);
     overflow-x: hidden;
+    background-color: #050b14; /* Azul muy oscuro de respaldo por si la imagen no carga */
 }
 
 /* 1. Fondo del océano con desenfoque y oscurecimiento */
 .fondo-oceano {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: url('imagenes/fondo.jpg'); /* Ruta a la foto que guardaste */
+    inset: 0;
+    background-image: url('imagenes/fondo.webp'); /* Ruta a la foto que guardaste */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -78,6 +76,7 @@ nav ul {
     display: flex;
     gap: 30px;
     margin: 0;
+    padding: 0;
 }
 
 nav a {
@@ -88,8 +87,8 @@ nav a {
 }
 
 nav a:hover {
-    color: var(--brillo-purpura);
-    text-shadow: 0 0 8px var(--brillo-purpura);
+    color: var(--brillo-principal);
+    text-shadow: 0 0 8px var(--brillo-principal);
 }
 
 /* 3. Cuadrícula Principal (Las 3 columnas de tu boceto) */
@@ -178,11 +177,6 @@ nav a:hover {
     min-height: 400px;
 }
 
-/* Corrección del fondo por si la imagen no carga */
-body {
-    background-color: #050b14; /* Azul muy oscuro de respaldo */
-}
-
 /* 4. Estilo de Botones Bioluminiscentes */
 .btn-bioluminiscente {
     background: transparent;
@@ -221,7 +215,7 @@ body {
 input[type="number"] {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--borde-cristal);
-    color: var(--brillo-cyan);
+    color: var(--brillo-secundario);
     padding: 10px 15px;
     border-radius: 10px;
     font-family: 'Poppins', sans-serif;
@@ -232,8 +226,8 @@ input[type="number"] {
 }
 
 input[type="number"]:focus {
-    border-color: var(--brillo-cyan);
-    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    border-color: var(--brillo-secundario);
+    box-shadow: 0 0 10px rgba(96, 229, 255, 0.3);
 }
 
 /* Placeholder (texto de ejemplo) */
@@ -306,7 +300,7 @@ input[type="number"]::placeholder {
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(243, 156, 113, 0.3); 
+    background: rgba(255, 255, 255, 0.1); 
     border-radius: 10px;
 }
 
@@ -318,6 +312,14 @@ input[type="number"]::placeholder {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--brillo-principal); 
+}
+
+/* Scrollbar para Firefox (los navegadores con ::-webkit-scrollbar siguen usando el diseño de arriba) */
+@supports not selector(::-webkit-scrollbar) {
+    .contenedor-especies {
+        scrollbar-width: thin;
+        scrollbar-color: var(--brillo-secundario) transparent;
+    }
 }
 
 /* Diseño de la burbuja de error */
@@ -338,7 +340,8 @@ input[type="number"]::placeholder {
 
 /* Estrella animada central */
 .estrella-animada {
-    font-size: 7.5rem;
+    font-size: 2rem; /* Reducido para que el texto del resultado quepa en la columna central */
+    text-align: center;
     animation: aparecer-estrella 0.5s ease-out forwards, flotar 2s ease-in-out infinite;
 }
 
@@ -348,8 +351,8 @@ input[type="number"]::placeholder {
 }
 
 @keyframes aparecer-estrella {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0% { scale: 0; opacity: 0; }
+    100% { scale: 1; opacity: 1; }
 }
 
 /* Estilo del menú desplegable de ecosistemas */
@@ -525,4 +528,16 @@ input[type="number"]::placeholder {
     color: var(--texto-claro);
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+/* --- Responsive: una sola columna en pantallas menores a 1280px --- */
+@media (max-width: 1280px) {
+    .contenedor-grid { grid-template-columns: 1fr; padding: 20px; }
+    .columna-centro { margin-top: 0; }
+    .columna-der { align-items: stretch; }
+}
+
+/* --- Accesibilidad: respeta la opción de reducir movimiento --- */
+@media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
 }

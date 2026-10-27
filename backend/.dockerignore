@@ -1,0 +1,10 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+imagenes/
+index.html
+app.js
+styles.css
+config.js
+*.md

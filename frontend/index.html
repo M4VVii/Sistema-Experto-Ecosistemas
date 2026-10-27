@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arquitecto de <br>Ecosistemas</title>
+    <title>Arquitecto de Ecosistemas</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Fuentes: Chewy para el título  y Poppins para los textos -->
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -31,16 +31,23 @@
         <select id="tipo-habitat" class="input-desplegable">
             <option value="" disabled selected>Selecciona un hábitat...</option>
             <option value="acuatico">Acuático (Acuario)</option>
+            <!-- CORRECCIÓN: Los values ahora coinciden exactamente con los átomos de tu hechos.pl -->
             <option value="terrestre_tropical">Terrestre Tropical</option>
             <option value="terrestre_desertico">Terrestre Desértico</option>
             <option value="mixto">Mixto (Paludario)</option>
         </select>
     </div>
 
-    <!-- Caja 2: Litros de agua -->
+    <!-- Caja 2: Capacidad del tanque (los campos cambian según el hábitat: litros, cm² o ambos) -->
     <div class="caja-cristal">
-        <label for="litros">Litros de agua:</label>
-        <input type="number" id="litros" min="1" placeholder="Ej. 120">
+        <div id="campo-litros">
+            <label for="litros">Litros de agua:</label>
+            <input type="number" id="litros" min="1" placeholder="Ej. 120">
+        </div>
+        <div id="campo-area" style="display: none; margin-top: 15px;">
+            <label for="area" id="etiqueta-area">Área del terrario (cm²):</label>
+            <input type="number" id="area" min="1" placeholder="Ej. 4500">
+        </div>
     </div>
     
     <!-- Caja 3: Especies -->
@@ -85,6 +92,7 @@
         </section>
     </main>
 
+    <!-- Los scripts están correctamente ubicados al final del body -->
     <script src="config.js"></script>
     <script src="app.js"></script>
 
@@ -116,8 +124,8 @@
     <div class="paso">
         <div class="numero-paso">2</div>
         <div class="detalle-paso">
-            <h3>Ingresa el volumen</h3>
-            <p>Escribe la capacidad total de tu tanque en litros. El sistema calculará si el espacio es suficiente para evitar el hacinamiento.</p>
+            <h3>Ingresa la capacidad</h3>
+            <p>Escribe el tamaño de tu recinto según el hábitat: litros para un acuario, área en cm² para un terrario, o ambos valores para un paludario mixto. El sistema calculará si el espacio es suficiente para evitar el hacinamiento.</p>
         </div>
     </div>
 

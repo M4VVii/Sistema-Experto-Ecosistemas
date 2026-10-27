@@ -3,6 +3,9 @@
 Thumbs.db
 .vscode/
 .idea/
+*~
+*.swp
+.Trash-*/
 
 # Secretos y configuración local
 .env
@@ -15,6 +18,7 @@ node_modules/
 dist/
 build/
 .vercel/
+npm-debug.log*
 
 # Archivos temporales de SWI-Prolog y logs
 *.qlf
