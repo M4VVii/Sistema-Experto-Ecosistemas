@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         msgError.style.display = 'none';
         
-        // Capacidad en el formato que espera servidor.pl (construir_capacidad/3):
+        // Capacidad en el formato que espera el servidor (servidor.py -> construir_tanque):
         // acuático -> número (litros) | terrestre -> número (cm²) | mixto -> objeto {litros, area}
         let capacidad;
         if (habitat === 'acuatico') {
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             capacidad = area;
         }
 
-        // 2. Estructura JSON mapeada a lo que exige servidor.pl
+        // 2. Estructura JSON que exige el servidor
         const datosConsulta = {
             especies: especiesSeleccionadas,
             tanque_tipo: habitat,
@@ -156,13 +156,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if(espiralCarga) espiralCarga.style.display = 'block';
 
-        // 3. Conexión HTTP hacia la API de Prolog en Render (la URL se configura en config.js)
+        // 3. Conexión HTTP hacia la API en Render (la URL se configura en config.js)
         fetch(CONFIG.API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datosConsulta)
         })
-        .then(response => response.json())
+        .then(response => {
+            // Si el servidor responde con un error (400/500), se trata como fallo de conexión
+            if (!response.ok) throw new Error('Respuesta ' + response.status);
+            return response.json();
+        })
         .then(data => {
             if(espiralCarga) espiralCarga.style.display = 'none';
             contenedorResultados.style.display = 'block';
@@ -170,14 +174,45 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mostrar la estrella central (empieza oculta con display: none en el HTML)
             estrellaCentro.style.display = 'block';
             
-            if(data.viable) {
+            // Limpiar resultados anteriores en el cuadro derecho
+            let contenedorDetalles = document.getElementById('detallesResultados');
+            if (!contenedorDetalles) {
+                // Si no existe el contenedor dinámico, lo creamos dentro de contenedorResultados
+                contenedorDetalles = document.createElement('div');
+                contenedorDetalles.id = 'detallesResultados';
+                contenedorResultados.appendChild(contenedorDetalles);
+            }
+
+            if (data.viable) {
                 estrellaCentro.textContent = "Ecosistema Viable";
                 estrellaCentro.style.color = "#4CAF50";
+
+                contenedorDetalles.innerHTML = `
+                    <div style="background: rgba(76, 175, 80, 0.15); border: 1px solid #4CAF50; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left;">
+                        <h4 style="color: #4CAF50; margin-top: 0;">✔ Hábitat en Equilibrio</h4>
+                        <p style="color: #e0e0e0; margin-bottom: 0;">Todas las especies seleccionadas son compatibles entre sí y cuentan con el espacio/parámetros adecuados en el tanque.</p>
+                    </div>
+                `;
             } else {
                 estrellaCentro.textContent = "Conflictos Encontrados";
                 estrellaCentro.style.color = "#F44336";
-                // Aquí Nina puede mapear 'data.conflictos' para listarlos en el HTML
-                console.log(data.conflictos); 
+
+                let htmlConflictos = '<div style="margin-top: 15px; text-align: left;">';
+                data.conflictos.forEach(c => {
+                    const involucradosTexto = Array.isArray(c.involucrados) 
+                        ? c.involucrados.join(', ') 
+                        : c.involucrados;
+
+                    htmlConflictos += `
+                        <div style="background: rgba(244, 67, 54, 0.15); border-left: 4px solid #F44336; border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <strong style="color: #FF5252; font-size: 1.05em; display: block; margin-bottom: 4px;">⚠️ ${c.mensaje}</strong>
+                            <span style="color: #bbb; font-size: 0.9em;">Involucrados: <code style="color: #FFD54F; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">${involucradosTexto}</code></span>
+                        </div>
+                    `;
+                });
+                htmlConflictos += '</div>';
+
+                contenedorDetalles.innerHTML = htmlConflictos;
             }
         })
         .catch(error => {

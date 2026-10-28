@@ -20,6 +20,11 @@ build/
 .vercel/
 npm-debug.log*
 
+# Python y Entorno Virtual
+venv/
+__pycache__/
+*.pyc
+
 # Archivos temporales de SWI-Prolog y logs
 *.qlf
 *.log
