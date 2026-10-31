@@ -5,21 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arquitecto de Ecosistemas</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Fuentes: Chewy para el título  y Poppins para los textos -->
-    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Fuentes: Abril Fatface para el título principal, Orbitron para encabezados, Share Tech Mono para lecturas de laboratorio y Poppins para los textos -->
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="fondo-oceano"></div>
+<!-- La clase del body define el fondo del ecosistema (app.js la cambia al elegir el hábitat):
+     fondo-general | fondo-acuatico | fondo-terrestre-tropical | fondo-terrestre-desertico | fondo-mixto -->
+<body class="fondo-general">
+    <!-- Capa auxiliar para el fundido suave entre fondos -->
+    <div id="fondo-transicion" class="fondo-transicion" aria-hidden="true"></div>
     
-    <header class="barra-navegacion">
-        <h1 class="titulo-y2k">Arquitecto de ecosistemas</h1>
-       <nav>
-    <ul>
-        <li><a href="#" id="link-inicio">Simulador de Hábitat</a></li>
-        <li><a href="#" id="link-especies">Enciclopedia de especies</a></li>
-        <li><a href="#" id="link-manual">Guía Rápida</a></li>
-    </ul>
-</nav>
+    <!-- Cabecera fija: título centrado + interruptor que despliega el menú flotante -->
+    <header class="cabecera">
+        <div class="bloque-titulo">
+            <h1 class="titulo-y2k">Arquitecto de ecosistemas</h1>
+
+            <!-- Interruptor discreto en la esquina inferior derecha del título -->
+            <button id="btn-menu" class="interruptor-menu" type="button"
+                    aria-expanded="false" aria-controls="menu-flotante" aria-label="Mostrar menú">
+                <span class="flecha"></span>
+            </button>
+
+            <!-- Menú flotante (oculto por defecto) -->
+            <nav id="menu-flotante" class="menu-flotante" aria-label="Menú principal">
+                <ul>
+                    <li><a href="#" id="link-especies">Enciclopedia de especies</a></li>
+                    <li><a href="#" id="link-manual">Guía Rápida</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main class="contenedor-grid">
@@ -27,7 +40,7 @@
         <section class="columna-izq">
     <!-- Caja 1: Tipo de Ecosistema -->
     <div class="caja-cristal">
-        <label for="tipo-habitat">Tipo de ecosistema:</label>
+        <label for="tipo-habitat">Tipo de ecosistema</label>
         <select id="tipo-habitat" class="input-desplegable">
             <option value="" disabled selected>Selecciona un hábitat...</option>
             <option value="acuatico">Acuático (Acuario)</option>
@@ -38,21 +51,29 @@
         </select>
     </div>
 
-    <!-- Caja 2: Capacidad del tanque (los campos cambian según el hábitat: litros, cm² o ambos) -->
+    <!-- Caja 2: Capacidad del tanque (los deslizadores cambian según el hábitat: litros, cm² o ambos) -->
     <div class="caja-cristal">
-        <div id="campo-litros">
-            <label for="litros">Litros de agua:</label>
-            <input type="number" id="litros" min="1" placeholder="Ej. 120">
+        <div id="campo-litros" class="campo-deslizador">
+            <div class="fila-deslizador">
+                <label for="litros">Litros de agua</label>
+                <output id="valor-litros" class="lectura-valor" for="litros">200 L</output>
+            </div>
+            <input type="range" id="litros" min="10" max="1000" step="10" value="200">
+            <div class="marcas-deslizador"><span>10 L</span><span>1,000 L</span></div>
         </div>
-        <div id="campo-area" style="display: none; margin-top: 15px;">
-            <label for="area" id="etiqueta-area">Área del terrario (cm²):</label>
-            <input type="number" id="area" min="1" placeholder="Ej. 4500">
+        <div id="campo-area" class="campo-deslizador" style="display: none; margin-top: 18px;">
+            <div class="fila-deslizador">
+                <label for="area" id="etiqueta-area">Área del terrario</label>
+                <output id="valor-area" class="lectura-valor" for="area">5,000 cm²</output>
+            </div>
+            <input type="range" id="area" min="100" max="60000" step="100" value="5000">
+            <div class="marcas-deslizador"><span>100 cm²</span><span>60,000 cm²</span></div>
         </div>
     </div>
     
     <!-- Caja 3: Especies -->
     <div class="caja-cristal contenedor-especies">
-        <h3>Selecciona las especies:</h3>
+        <h3>Selecciona las especies</h3>
         <div id="cuadricula" class="tarjetas-grid">
             <!-- JavaScript inyectará las tarjetas aquí -->
         </div>
@@ -66,14 +87,18 @@
         <!-- Burbuja de error -->
         <div id="error-msg" class="burbuja-error" style="display: none;"></div>
         
-        <!-- Espiral de carga -->
-        <div id="cargando" class="espiral-carga" style="display: none;">🌀</div>
+        <!-- Indicador de carga (anillos de escáner) -->
+        <div id="cargando" class="espiral-carga" style="display: none;">
+            <span class="anillo anillo-1"></span>
+            <span class="anillo anillo-2"></span>
+            <span class="nucleo"></span>
+        </div>
         
-        <!-- Estrella de resultado -->
+        <!-- Mensaje de resultado (levita) -->
         <div id="estrella-resultado" class="estrella-animada" style="display: none;"></div>
     </div>
 
-    <!-- Botón desplazado hacia abajo -->
+    <!-- Botón central (levita y brilla en neón al pasar el ratón) -->
     <button id="btn-evaluar" class="btn-bioluminiscente">Evaluar</button>
 </section>
 
@@ -81,12 +106,30 @@
         <section class="columna-der">
             <button id="btn-limpiar" class="btn-bioluminiscente btn-secundario">Nueva Consulta</button>
             <div class="caja-cristal recuadro-resultados">
-                <h2>Resultados</h2>
-                <div id="resultados-contenido" style="display: none;">
-                    <h3 id="veredicto"></h3>
-                    <p id="mensaje"></p>
-                    <ul id="razones"></ul>
-                    <ul id="sugerencias"></ul>
+                <h2><span class="led"></span>Resultados</h2>
+
+                <!-- Zona con scroll interno: aquí se apilan los monitores sin cortarse -->
+                <div class="zona-scroll-resultados">
+                    <!-- Monitor en espera: se oculta cuando llega un diagnóstico -->
+                    <div id="monitor-espera" class="monitor monitor-espera">
+                        <div class="monitor-barra">
+                            <span class="led"></span>
+                            <span class="monitor-titulo">Bio-Scan · En espera</span>
+                            <span class="monitor-codigo">STBY</span>
+                        </div>
+                        <div class="monitor-cuerpo">
+                            <div class="monitor-estado">Esperando muestra</div>
+                            <svg class="trazo trazo-espera" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true">
+                                <path d="M0 20 L200 20" pathLength="100"></path>
+                            </svg>
+                            <p class="monitor-nota">Define el hábitat, ajusta la capacidad y selecciona al menos dos especies. Luego presiona Evaluar para iniciar el diagnóstico.</p>
+                        </div>
+                    </div>
+
+                    <!-- Aquí app.js inyecta los monitores de diagnóstico -->
+                    <div id="resultados-contenido" style="display: none;">
+                        <div id="monitores"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -117,15 +160,15 @@
         <div class="numero-paso">1</div>
         <div class="detalle-paso">
             <h3>Selecciona el entorno</h3>
-            <p>Abre el menú desplegable y define el tipo de hábitat de tu recinto (Acuario, Terrario Tropical, Terrario Desértico o Paludario mixto).</p>
+            <p>Abre el menú desplegable y define el tipo de hábitat de tu recinto (Acuario, Terrario Tropical, Terrario Desértico o Paludario mixto). El fondo de la página cambia según el ecosistema.</p>
         </div>
     </div>
 
     <div class="paso">
         <div class="numero-paso">2</div>
         <div class="detalle-paso">
-            <h3>Ingresa la capacidad</h3>
-            <p>Escribe el tamaño de tu recinto según el hábitat: litros para un acuario, área en cm² para un terrario, o ambos valores para un paludario mixto. El sistema calculará si el espacio es suficiente para evitar el hacinamiento.</p>
+            <h3>Ajusta la capacidad</h3>
+            <p>Mueve el deslizador según el hábitat: litros para un acuario, área en cm² para un terrario, o ambos valores para un paludario mixto. El sistema calculará si el espacio es suficiente para evitar el hacinamiento.</p>
         </div>
     </div>
 
@@ -141,7 +184,7 @@
         <div class="numero-paso">4</div>
         <div class="detalle-paso">
             <h3>Evalúa la convivencia</h3>
-            <p>Presiona "Evaluar". El sistema revisará automáticamente si las especies pueden vivir juntos en paz, comprobando que compartan el mismo clima, tengan espacio suficiente y no corran peligro entre ellos.</p>
+            <p>Presiona "Evaluar". El sistema revisará automáticamente si las especies pueden vivir juntos en paz, comprobando que compartan el mismo clima, tengan espacio suficiente y no corran peligro entre ellos. Los monitores del panel de Resultados muestran el diagnóstico y cada conflicto detectado.</p>
         </div>
     </div>
 </div>

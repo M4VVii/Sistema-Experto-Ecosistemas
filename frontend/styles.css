@@ -1,101 +1,304 @@
-/* Variables de color basadas en tu paleta bioluminiscente */
+/* ==========================================================================
+   ARQUITECTO DE ECOSISTEMAS · Tema Bio-Tech / Laboratorio de Biología
+   Glassmorphism oscuro con resplandores en cian y verde esmeralda
+   ========================================================================== */
+
+/* --- Variables de diseño --- */
 :root {
-    /* Fondo más transparente para que resalte la flor trasera */
-    --fondo-cristal: rgba(20, 15, 30, 0.35); 
-    --borde-cristal: rgba(255, 255, 255, 0.2);
-    /* Colores inspirados en los pétalos iridiscentes de tu foto */
-    --brillo-principal: #d884ff; /* Lila/Rosa brillante */
-    --brillo-secundario: #60e5ff; /* Azul celeste suave */
-    --texto-claro: #f0f4f8;
+    --fondo-cristal: rgba(5, 18, 28, 0.58);
+    --borde-cristal: rgba(94, 234, 212, 0.30);
+    --cian: #22d3ee;
+    --cian-suave: #67e8f9;
+    --esmeralda: #10b981;
+    --esmeralda-suave: #34d399;
+    --alerta: #ff4d6d;
+    --texto-claro: #e6f7fb;
+    --texto-tenue: #8fb3bf;
+    --fuente-titulo: 'Orbitron', 'Poppins', sans-serif;
+    --fuente-datos: 'Share Tech Mono', 'Courier New', monospace;
+    --brillo-cristal: 0 0 14px rgba(34, 211, 238, 0.16), 0 0 30px rgba(16, 185, 129, 0.10);
 }
 
+/* --- Base --- */
 body {
     margin: 0;
+    min-height: 100vh;
     font-family: 'Poppins', sans-serif;
     color: var(--texto-claro);
     overflow-x: hidden;
-    background-color: #050b14; /* Azul muy oscuro de respaldo por si la imagen no carga */
-}
-
-/* 1. Fondo del océano con desenfoque y oscurecimiento */
-.fondo-oceano {
-    position: fixed;
-    inset: 0;
-    background-image: url('imagenes/fondo.webp'); /* Ruta a la foto que guardaste */
+    background-color: #04101a; /* Color de respaldo por si la imagen no carga */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    
-    /* 
-       Aquí está la magia: 
-       - blur(5px) desenfoca lo suficiente para que el texto sea legible pero las flores se sigan distinguiendo.
-       - brightness(0.35) la oscurece un 65% para que tus letras brillen encima.
-       - contrast(1.1) le da un pequeño extra de contraste para que lo bioluminiscente siga vivo en la oscuridad.
-    */
-    filter: blur(5px) brightness(0.35) contrast(1.1); 
-    
-    z-index: -1; /* Asegura que se quede atrás de todo */
-    transform: scale(1.05); /* Evita que se vean bordes blancos por el desenfoque */
+    background-attachment: fixed;
+    /* Transición suave del cambio de entorno. Nota: los navegadores no pueden interpolar
+       entre dos background-image distintos, así que el color de fondo se anima con esta
+       transición y el cruce de imágenes lo resuelve la capa #fondo-transicion (ver abajo). */
+    transition: background 0.5s ease;
 }
 
-/* 2. Barra de Navegación */
-.barra-navegacion {
+/* ==========================================================================
+   1. FONDOS DINÁMICOS POR ECOSISTEMA
+   Cada clase combina resplandores de color + un degradado oscuro (para que el texto se lea)
+   + una imagen. Reemplaza las rutas url('imagenes/...') por tus fotos cuando las tengas;
+   mientras una imagen no exista, solo se ve el degradado.
+   app.js cambia la clase del <body> al elegir el tipo de ecosistema.
+   ========================================================================== */
+
+/* General (por defecto) */
+body.fondo-general {
+    background-color: #04101a;
+    background-image:
+        radial-gradient(ellipse at 15% 10%, rgba(34, 211, 238, 0.16), transparent 55%),
+        radial-gradient(ellipse at 85% 90%, rgba(16, 185, 129, 0.14), transparent 55%),
+        linear-gradient(180deg, rgba(3, 12, 20, 0.78), rgba(3, 12, 20, 0.92)),
+        url('imagenes/fondo.webp'); /* PLACEHOLDER: fondo general */
+}
+
+/* Acuático */
+body.fondo-acuatico {
+    background-color: #020f1f;
+    background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.28), transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(34, 211, 238, 0.16), transparent 55%),
+        linear-gradient(180deg, rgba(2, 18, 38, 0.70), rgba(1, 10, 24, 0.94)),
+        url('imagenes/fondo-acuatico.webp'); /* PLACEHOLDER: ruta-imagen acuático */
+}
+
+/* Terrestre Tropical */
+body.fondo-terrestre-tropical {
+    background-color: #03140d;
+    background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(52, 211, 153, 0.26), transparent 58%),
+        radial-gradient(ellipse at 90% 90%, rgba(132, 204, 22, 0.14), transparent 55%),
+        linear-gradient(180deg, rgba(3, 26, 16, 0.70), rgba(2, 14, 9, 0.94)),
+        url('imagenes/fondo-tropical.webp'); /* PLACEHOLDER: ruta-imagen tropical */
+}
+
+/* Terrestre Desértico */
+body.fondo-terrestre-desertico {
+    background-color: #140a03;
+    background-image:
+        radial-gradient(ellipse at 80% 0%, rgba(251, 146, 60, 0.26), transparent 58%),
+        radial-gradient(ellipse at 10% 100%, rgba(250, 204, 21, 0.12), transparent 55%),
+        linear-gradient(180deg, rgba(34, 18, 6, 0.72), rgba(18, 9, 3, 0.94)),
+        url('imagenes/fondo-desertico.webp'); /* PLACEHOLDER: ruta-imagen desértico */
+}
+
+/* Mixto (paludario) */
+body.fondo-mixto {
+    background-color: #031a1a;
+    background-image:
+        radial-gradient(ellipse at 0% 0%, rgba(34, 211, 238, 0.24), transparent 55%),
+        radial-gradient(ellipse at 100% 100%, rgba(52, 211, 153, 0.24), transparent 55%),
+        linear-gradient(135deg, rgba(3, 22, 36, 0.72), rgba(3, 26, 18, 0.92)),
+        url('imagenes/fondo-mixto.webp'); /* PLACEHOLDER: ruta-imagen mixto */
+}
+
+/* Capa auxiliar del cruce de fondos: app.js copia en ella el fondo anterior y la desvanece,
+   de modo que el cambio de entorno se ve como un fundido y no como un salto. */
+.fondo-transicion {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ==========================================================================
+   Cabecera: título centrado + menú flotante desplegable
+   ========================================================================== */
+.cabecera {
+    position: sticky; /* Se queda arriba y baja junto con la página al hacer scroll */
+    top: 0;
+    z-index: 500;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 15px 40px;
-    background: rgba(10, 25, 47, 0.5);
-    border-bottom: 1px solid var(--borde-cristal);
-    backdrop-filter: blur(10px);
+    padding: 12px 40px 28px; /* El espacio inferior aloja el interruptor del menú */
 }
 
+/* Fondo de cristal de la cabecera. Va en un pseudo-elemento para que el menú desplegable
+   (que sale de la cabecera) también pueda desenfocar lo que tiene detrás. */
+.cabecera::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(4, 14, 22, 0.55);
+    border-bottom: 1px solid var(--borde-cristal);
+    box-shadow: 0 4px 24px rgba(34, 211, 238, 0.10), 0 1px 0 rgba(16, 185, 129, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.bloque-titulo {
+    position: relative;
+    display: inline-block;
+}
+
+/* Título principal: estilo original (Abril Fatface con degradado y neón) */
 .titulo-y2k {
     font-family: 'Abril Fatface', serif;
-    font-size: 2.8rem; 
+    font-size: 2.8rem;
     margin: 0;
+    text-align: center;
     text-transform: uppercase;
     letter-spacing: 2px;
     line-height: 1.1;
-    
+
     /* 1. Colores más suaves y desaturados */
     background: linear-gradient(90deg, #4ca6b8 0%, #853bb5 35%, #cc859a 70%, #cca329 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
-    
-    /* 2. Borde blanco más delgado y semitransparente */
+
+    /* 2. Borde blanco delgado y semitransparente */
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
-    
-    /* 3. Resplandor exterior mucho más sutil */
+
+    /* 3. Resplandor exterior sutil */
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
 }
 
-nav ul {
+/* Respaldo: si el navegador no soporta texto con degradado, el título sigue visible */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+    .titulo-y2k {
+        background: none;
+        color: var(--cian-suave);
+        -webkit-text-fill-color: currentColor;
+        text-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+    }
+}
+
+/* Interruptor del menú: pestaña luminosa en la esquina inferior derecha del título */
+.interruptor-menu {
+    position: absolute;
+    right: -10px;
+    bottom: -24px;
+    width: 38px;
+    height: 20px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(4, 14, 22, 0.78);
+    border: 1px solid rgba(103, 232, 249, 0.55);
+    border-radius: 10px;
+    cursor: pointer;
+    animation: pulso-interruptor 3.2s ease-in-out infinite;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.interruptor-menu:hover,
+.interruptor-menu:focus-visible,
+.interruptor-menu[aria-expanded="true"] {
+    border-color: var(--cian-suave);
+    background: rgba(34, 211, 238, 0.16);
+    outline: none;
+}
+
+.interruptor-menu .flecha {
+    width: 7px;
+    height: 7px;
+    margin-top: -3px;
+    border-right: 2px solid var(--cian-suave);
+    border-bottom: 2px solid var(--cian-suave);
+    transform: rotate(45deg);
+    filter: drop-shadow(0 0 3px var(--cian));
+    transition: transform 0.35s ease;
+}
+
+.interruptor-menu[aria-expanded="true"] .flecha {
+    margin-top: 3px;
+    transform: rotate(-135deg); /* La flecha apunta hacia arriba cuando el menú está abierto */
+}
+
+@keyframes pulso-interruptor {
+    0%, 100% { box-shadow: 0 0 8px rgba(34, 211, 238, 0.30); }
+    50%      { box-shadow: 0 0 16px rgba(34, 211, 238, 0.65), 0 0 26px rgba(16, 185, 129, 0.35); }
+}
+
+/* Menú flotante: oculto por defecto, se despliega hacia abajo con un fundido */
+.menu-flotante {
+    position: absolute;
+    top: calc(100% + 30px);
+    right: -10px;
+    min-width: 250px;
+    padding: 8px;
+    border-radius: 14px;
+    background: rgba(5, 18, 28, 0.72);
+    border: 1px solid rgba(103, 232, 249, 0.40);
+    box-shadow: var(--brillo-cristal), 0 12px 30px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none; /* Cerrado (o desvaneciéndose): no se puede hacer clic en él */
+    transform: translateY(-8px);
+    clip-path: inset(0 -24px 100% -24px);
+    transition:
+        clip-path 0.4s cubic-bezier(0.22, 0.8, 0.3, 1),
+        transform 0.4s cubic-bezier(0.22, 0.8, 0.3, 1),
+        opacity 0.3s ease,
+        visibility 0s linear 0.4s; /* Se oculta del todo al terminar el cierre */
+}
+
+.menu-flotante.abierto {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    clip-path: inset(0 -24px -40px -24px);
+    transition:
+        clip-path 0.4s cubic-bezier(0.22, 0.8, 0.3, 1),
+        transform 0.4s cubic-bezier(0.22, 0.8, 0.3, 1),
+        opacity 0.3s ease,
+        visibility 0s linear 0s;
+}
+
+.menu-flotante ul {
     list-style: none;
     display: flex;
-    gap: 30px;
+    flex-direction: column;
+    gap: 4px;
     margin: 0;
     padding: 0;
 }
 
-nav a {
+.menu-flotante a {
+    display: block;
+    padding: 12px 16px;
+    font-family: var(--fuente-datos);
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--texto-claro);
     text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s, text-shadow 0.3s;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    transition: color 0.3s, text-shadow 0.3s, background 0.3s, border-color 0.3s;
 }
 
-nav a:hover {
-    color: var(--brillo-principal);
-    text-shadow: 0 0 8px var(--brillo-principal);
+.menu-flotante a:hover,
+.menu-flotante a:focus-visible {
+    color: var(--cian-suave);
+    text-shadow: 0 0 8px var(--cian);
+    background: rgba(34, 211, 238, 0.10);
+    border-color: rgba(103, 232, 249, 0.40);
+    outline: none;
 }
 
-/* 3. Cuadrícula Principal (Las 3 columnas de tu boceto) */
+/* ==========================================================================
+   Cuadrícula principal (3 columnas)
+   ========================================================================== */
 .contenedor-grid {
     display: grid;
     /* Anchos exactos e inamovibles: Izquierda, Centro, Derecha */
-    grid-template-columns: 380px 250px 450px; 
+    grid-template-columns: 380px 250px 450px;
     justify-content: center; /* Centra todo el bloque en el monitor */
     gap: 40px;
     padding: 40px;
@@ -112,33 +315,41 @@ nav a:hover {
     box-sizing: border-box;
 }
 
-/* Diseño y animación del icono de carga */
-.espiral-carga {
-    font-size: 7.5rem; /* Tamaño grande */
-    text-shadow: 0 0 20px var(--brillo-secundario);
-    animation: resplandor 1.5s ease-in-out infinite; /* Parpadeo nítido */
-}
-
-@keyframes resplandor {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); text-shadow: 0 0 40px var(--brillo-secundario); }
-}
-
-/* Estilo general para las cajas con esquinas redondeadas */
+/* ==========================================================================
+   2. GLASSMORPHISM: paneles oscuros semitransparentes, borde delgado y resplandor
+   ========================================================================== */
 .caja-cristal {
     background: var(--fondo-cristal);
-    border: 1px solid var(--borde-cristal);
-    border-radius: 20px;
-    padding: 30px; /* Mayor margen interno para que no se vea apretado */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    /* Borde delgado: cian arriba, esmeralda abajo */
+    border: 1px solid;
+    border-color:
+        rgba(103, 232, 249, 0.42)
+        rgba(103, 232, 249, 0.22)
+        rgba(52, 211, 153, 0.42)
+        rgba(52, 211, 153, 0.22);
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow:
+        var(--brillo-cristal),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        inset 0 0 30px rgba(34, 211, 238, 0.04);
     backdrop-filter: blur(12px); /* Efecto de vidrio esmerilado */
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.caja-cristal label {
+    font-family: var(--fuente-datos);
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cian-suave);
 }
 
 /* Layout específico de las columnas */
 /* Candado mágico para que el contenido no deforme las columnas */
 .columna-izq, .columna-centro, .columna-der {
     width: 100%;
-    min-width: 0; 
+    min-width: 0;
 }
 
 .columna-izq {
@@ -153,7 +364,7 @@ nav a:hover {
     align-items: center;
     justify-content: flex-start;
     gap: 15px;
-    margin-top: 150px; 
+    margin-top: 150px;
 }
 
 .columna-der {
@@ -163,79 +374,221 @@ nav a:hover {
     gap: 20px;
 }
 
-/* Asegurar que la burbuja no se desborde del centro */
+/* Zona dinámica del centro (error, carga y resultado) */
 .zona-dinamica-centro {
-    min-height: 160px; 
+    min-height: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
 }
 
+/* Panel de resultados: su altura se adapta a la ventana y el contenido hace scroll interno */
 .recuadro-resultados {
     width: 100%;
     min-height: 400px;
+    max-height: calc(100vh - 260px);
+    display: flex;
+    flex-direction: column;
 }
 
-/* 4. Estilo de Botones Bioluminiscentes */
-.btn-bioluminiscente {
-    background: transparent;
-    color: var(--brillo-secundario);
-    border: 2px solid var(--brillo-secundario);
-    border-radius: 30px;
-    padding: 12px 30px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(96, 229, 255, 0.2);
-    transition: all 0.3s ease;
+.recuadro-resultados h2 {
+    flex-shrink: 0; /* El título "Resultados" queda fijo; solo las tarjetas se desplazan */
 }
 
-.btn-bioluminiscente:hover {
-    background: var(--brillo-secundario);
-    color: #050b14;
-    box-shadow: 0 0 20px var(--brillo-secundario), 0 0 40px var(--brillo-secundario);
-    transform: scale(1.05);
+.zona-scroll-resultados {
+    flex: 1 1 auto;
+    min-height: 0;          /* Necesario para que el flex permita el scroll en lugar de crecer */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 6px 10px 14px 6px; /* Deja espacio para el resplandor de las tarjetas */
+    margin-right: -6px;
 }
 
-.btn-secundario {
-    color: var(--brillo-principal);
-    border-color: var(--brillo-principal);
-    box-shadow: 0 0 10px rgba(216, 132, 255, 0.2);
+/* Barra de desplazamiento del panel: riel oscuro con control cian */
+.zona-scroll-resultados::-webkit-scrollbar {
+    width: 8px;
 }
 
-.btn-secundario:hover {
-    background: var(--brillo-principal);
-    color: #050b14;
-    box-shadow: 0 0 20px var(--brillo-principal), 0 0 40px var(--brillo-principal);
-}
-
-/* 5. Estilo del Input de Litros */
-input[type="number"] {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--borde-cristal);
-    color: var(--brillo-secundario);
-    padding: 10px 15px;
+.zona-scroll-resultados::-webkit-scrollbar-track {
+    background: rgba(2, 10, 16, 0.75);
+    border: 1px solid rgba(94, 234, 212, 0.15);
     border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
+}
+
+.zona-scroll-resultados::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--cian), #0e7490);
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+}
+
+.zona-scroll-resultados::-webkit-scrollbar-thumb:hover {
+    background: var(--cian-suave);
+}
+
+/* LED indicador (se usa en títulos de panel y en los monitores) */
+.led {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--tono, var(--cian));
+    box-shadow: 0 0 8px var(--tono, var(--cian)), 0 0 16px var(--tono, var(--cian));
+    animation: parpadeo 1.6s ease-in-out infinite;
+}
+
+.recuadro-resultados h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px 0;
+    font-family: var(--fuente-titulo);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--texto-claro);
+}
+
+/* ==========================================================================
+   Selector de ecosistema
+   ========================================================================== */
+.input-desplegable {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: rgba(2, 10, 16, 0.55);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    border: 1px solid var(--borde-cristal);
+    color: var(--texto-claro);
+    padding: 11px 38px 11px 15px;
+    border-radius: 10px;
+    font-family: var(--fuente-datos);
     font-size: 1rem;
     outline: none;
-    margin-left: 10px;
-    transition: border 0.3s, box-shadow 0.3s;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-input[type="number"]:focus {
-    border-color: var(--brillo-secundario);
-    box-shadow: 0 0 10px rgba(96, 229, 255, 0.3);
+.input-desplegable:hover,
+.input-desplegable:focus {
+    border-color: var(--cian);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
 }
 
-/* Placeholder (texto de ejemplo) */
-input[type="number"]::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+/* Color de fondo oscuro para las opciones al desplegar */
+.input-desplegable option {
+    background: #04101a;
+    color: var(--texto-claro);
 }
 
-/* Contenedor principal de las especies con scroll */
+/* ==========================================================================
+   3. CONTROLES INTERACTIVOS: deslizadores (input type="range")
+   ========================================================================== */
+.campo-deslizador {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fila-deslizador {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Lectura en tiempo real del valor del deslizador */
+.lectura-valor {
+    font-family: var(--fuente-datos);
+    font-size: 1.15rem;
+    white-space: nowrap;
+    color: var(--esmeralda-suave);
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
+    padding: 2px 10px;
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    border-radius: 8px;
+    background: rgba(2, 10, 16, 0.6);
+}
+
+.marcas-deslizador {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--fuente-datos);
+    font-size: 0.72rem;
+    color: var(--texto-tenue);
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 22px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Pista (Chrome, Edge, Safari): se rellena hasta el valor actual con --progreso (lo actualiza app.js) */
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 6px;
+    background: linear-gradient(90deg,
+        var(--cian) 0%,
+        var(--esmeralda-suave) var(--progreso, 50%),
+        rgba(255, 255, 255, 0.12) var(--progreso, 50%));
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.25);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-top: -7px; /* Centra el control sobre la pista de 6px */
+    border-radius: 50%;
+    background: #04121a;
+    border: 2px solid var(--cian);
+    box-shadow: 0 0 10px var(--cian), 0 0 20px rgba(16, 185, 129, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.18);
+    box-shadow: 0 0 14px var(--cian), 0 0 30px rgba(16, 185, 129, 0.8);
+}
+
+/* Pista (Firefox) */
+input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+input[type="range"]::-moz-range-progress {
+    height: 6px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--cian), var(--esmeralda-suave));
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #04121a;
+    border: 2px solid var(--cian);
+    box-shadow: 0 0 10px var(--cian), 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+/* ==========================================================================
+   Selección de especies
+   ========================================================================== */
 .contenedor-especies {
     max-height: 450px;
     overflow-y: auto;
@@ -243,8 +596,11 @@ input[type="number"]::placeholder {
 
 .contenedor-especies h3 {
     margin-top: 0;
-    font-size: 1.1rem;
-    color: var(--brillo-secundario);
+    font-family: var(--fuente-titulo);
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cian-suave);
 }
 
 /* Cuadrícula adaptable */
@@ -257,8 +613,9 @@ input[type="number"]::placeholder {
 
 /* Tarjeta individual */
 .tarjeta-especie {
-    background: rgba(10, 25, 47, 0.6);
-    border: 2px solid var(--borde-cristal);
+    position: relative;
+    background: rgba(4, 14, 22, 0.55);
+    border: 1px solid rgba(94, 234, 212, 0.22);
     border-radius: 12px;
     padding: 10px;
     display: flex;
@@ -277,60 +634,213 @@ input[type="number"]::placeholder {
 }
 
 .tarjeta-especie span {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     text-align: center;
     color: var(--texto-claro);
 }
 
 /* Efectos al pasar el ratón y al hacer clic (Seleccionada) */
 .tarjeta-especie:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(34, 211, 238, 0.10);
+    border-color: rgba(103, 232, 249, 0.6);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.30);
     transform: translateY(-3px);
 }
 
 .tarjeta-especie.seleccionada {
-    border-color: var(--brillo-principal);
-    background: rgba(216, 132, 255, 0.15);
-    box-shadow: 0 0 15px var(--brillo-principal);
+    border-color: var(--esmeralda-suave);
+    background: rgba(16, 185, 129, 0.14);
+    box-shadow: 0 0 16px rgba(52, 211, 153, 0.55), inset 0 0 12px rgba(52, 211, 153, 0.12);
 }
 
-/* Diseño de la barra de desplazamiento (Scrollbar) */
+.tarjeta-especie.seleccionada::after {
+    content: '✓';
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--esmeralda-suave);
+    text-shadow: 0 0 6px var(--esmeralda-suave);
+}
+
+/* ==========================================================================
+   Barra de desplazamiento
+   ========================================================================== */
 ::-webkit-scrollbar {
-    width: 8px; 
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1); 
+    background: rgba(2, 10, 16, 0.75);
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--brillo-secundario); 
+    background: linear-gradient(180deg, var(--cian), #0e7490);
     border-radius: 10px;
-    box-shadow: 0 0 10px var(--brillo-secundario); 
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--brillo-principal); 
+    background: var(--cian-suave);
 }
 
 /* Scrollbar para Firefox (los navegadores con ::-webkit-scrollbar siguen usando el diseño de arriba) */
 @supports not selector(::-webkit-scrollbar) {
-    .contenedor-especies {
+    .contenedor-especies, .zona-scroll-resultados, .modal-contenido {
         scrollbar-width: thin;
-        scrollbar-color: var(--brillo-secundario) transparent;
+        scrollbar-color: var(--cian) rgba(2, 10, 16, 0.75);
     }
 }
 
-/* Diseño de la burbuja de error */
+/* ==========================================================================
+   Botones bioluminiscentes
+   ========================================================================== */
+.btn-bioluminiscente {
+    background: transparent;
+    color: var(--cian-suave);
+    border: 2px solid var(--cian);
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-family: var(--fuente-titulo);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.25), inset 0 0 10px rgba(34, 211, 238, 0.08);
+    transition: all 0.3s ease;
+}
+
+.btn-bioluminiscente:hover {
+    background: var(--cian);
+    color: #031018;
+    box-shadow: 0 0 20px var(--cian), 0 0 40px var(--cian);
+    transform: scale(1.05);
+}
+
+.btn-secundario {
+    color: var(--esmeralda-suave);
+    border-color: var(--esmeralda-suave);
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.25), inset 0 0 10px rgba(52, 211, 153, 0.08);
+}
+
+.btn-secundario:hover {
+    background: var(--esmeralda-suave);
+    color: #031018;
+    box-shadow: 0 0 20px var(--esmeralda-suave), 0 0 40px var(--esmeralda-suave);
+}
+
+/* ==========================================================================
+   4. CENTRO LEVITANTE
+   Se anima la propiedad "translate" (y no "transform") para que la levitación no
+   choque con el escalado del hover ni con la animación de aparición.
+   ========================================================================== */
+@keyframes levitar {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -14px; }
+}
+
+#btn-evaluar {
+    animation: levitar 3.4s ease-in-out infinite;
+}
+
+/* Resplandor neón intenso al pasar el ratón */
+#btn-evaluar:hover {
+    background: linear-gradient(90deg, var(--cian), var(--esmeralda-suave));
+    border-color: #ffffff;
+    color: #021017;
+    transform: scale(1.08);
+    box-shadow:
+        0 0 8px var(--cian-suave),
+        0 0 22px var(--cian),
+        0 0 46px var(--cian),
+        0 0 80px var(--esmeralda-suave),
+        0 0 120px rgba(52, 211, 153, 0.7),
+        inset 0 0 14px rgba(255, 255, 255, 0.35);
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}
+
+/* Mensaje de resultado central (el color lo define app.js: verde si es viable, rojo si no) */
+.estrella-animada {
+    font-family: var(--fuente-titulo);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid currentColor;
+    background: rgba(4, 14, 22, 0.6);
+    text-shadow: 0 0 10px currentColor;
+    box-shadow: 0 0 18px currentColor, inset 0 0 14px rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: aparecer-estrella 0.5s ease-out forwards, levitar 3.8s ease-in-out infinite;
+}
+
+@keyframes aparecer-estrella {
+    0%   { scale: 0; opacity: 0; }
+    100% { scale: 1; opacity: 1; }
+}
+
+/* Indicador de carga: anillos de escáner */
+.espiral-carga {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.espiral-carga .anillo {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid transparent;
+}
+
+.espiral-carga .anillo-1 {
+    inset: 0;
+    border-top-color: var(--cian);
+    border-right-color: rgba(34, 211, 238, 0.35);
+    filter: drop-shadow(0 0 8px var(--cian));
+    animation: girar 1.2s linear infinite;
+}
+
+.espiral-carga .anillo-2 {
+    inset: 16px;
+    border-bottom-color: var(--esmeralda-suave);
+    border-left-color: rgba(52, 211, 153, 0.35);
+    filter: drop-shadow(0 0 8px var(--esmeralda));
+    animation: girar-inverso 0.9s linear infinite;
+}
+
+.espiral-carga .nucleo {
+    position: absolute;
+    inset: 46px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, var(--cian) 55%, transparent 72%);
+    animation: pulso-nucleo 1.2s ease-in-out infinite;
+}
+
+@keyframes girar         { to { transform: rotate(360deg); } }
+@keyframes girar-inverso { to { transform: rotate(-360deg); } }
+@keyframes pulso-nucleo {
+    0%, 100% { transform: scale(0.7); opacity: 0.6; }
+    50%      { transform: scale(1.15); opacity: 1; }
+}
+
+/* Burbuja de error: alerta de laboratorio */
 .burbuja-error {
-    background: rgba(255, 0, 85, 0.15);
-    border: 1px solid #ff0055;
-    color: #ffb3c6;
-    padding: 12px 15px;
-    border-radius: 25px;
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
-    backdrop-filter: blur(10px);
+    background: rgba(40, 6, 16, 0.6);
+    border: 1px solid rgba(255, 77, 109, 0.7);
+    color: #ffd0da;
+    font-family: var(--fuente-datos);
+    padding: 12px 16px;
+    border-radius: 14px;
+    box-shadow: 0 0 16px rgba(255, 77, 109, 0.35), inset 0 0 14px rgba(255, 77, 109, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     font-size: 0.9rem;
     text-align: center;
     animation: flotar 2s ease-in-out infinite;
@@ -338,60 +848,236 @@ input[type="number"]::placeholder {
     box-sizing: border-box;
 }
 
-/* Estrella animada central */
-.estrella-animada {
-    font-size: 2rem; /* Reducido para que el texto del resultado quepa en la columna central */
-    text-align: center;
-    animation: aparecer-estrella 0.5s ease-out forwards, flotar 2s ease-in-out infinite;
+.burbuja-error::before {
+    content: 'ALERTA //';
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--alerta);
+    margin-bottom: 4px;
 }
 
 @keyframes flotar {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50%      { transform: translateY(-10px); }
 }
 
-@keyframes aparecer-estrella {
-    0% { scale: 0; opacity: 0; }
-    100% { scale: 1; opacity: 1; }
+/* ==========================================================================
+   5. PANEL DE RESULTADOS: monitores de diagnóstico de laboratorio
+   ========================================================================== */
+#monitores {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-/* Estilo del menú desplegable de ecosistemas */
-.input-desplegable {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--borde-cristal);
-    color: var(--brillo-secundario);
-    padding: 10px 15px;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
+.monitor {
+    --tono: var(--esmeralda-suave);
+    --tono-rgb: 52, 211, 153;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0; /* Evita que las tarjetas se compriman y se vean cortadas */
+    border-radius: 12px;
+    font-family: var(--fuente-datos);
+    background:
+        linear-gradient(180deg, rgba(var(--tono-rgb), 0.08), rgba(2, 10, 16, 0) 45%),
+        rgba(2, 10, 16, 0.82);
+    border: 1px solid rgba(var(--tono-rgb), 0.55);
+    box-shadow: 0 0 14px rgba(var(--tono-rgb), 0.25), inset 0 0 22px rgba(var(--tono-rgb), 0.08);
+    animation: monitor-encendido 0.6s ease-out both;
+    animation-delay: var(--retraso, 0s);
+}
+
+.monitor-alerta {
+    --tono: #ff4d6d;
+    --tono-rgb: 255, 77, 109;
+}
+
+.monitor-espera {
+    --tono: var(--cian);
+    --tono-rgb: 34, 211, 238;
+    animation: none;
+}
+
+/* Líneas de escaneo (efecto de pantalla) */
+.monitor::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px);
+}
+
+/* Barra de barrido que recorre el monitor */
+.monitor::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -40%;
+    height: 40%;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(var(--tono-rgb), 0.12), transparent);
+    animation: barrido 4.5s linear infinite;
+}
+
+.monitor-barra {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    background: rgba(var(--tono-rgb), 0.12);
+    border-bottom: 1px solid rgba(var(--tono-rgb), 0.35);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tono);
+}
+
+.monitor-titulo {
+    flex: 1;
+}
+
+.monitor-codigo {
+    color: var(--texto-tenue);
+}
+
+.monitor-cuerpo {
+    padding: 12px 14px 14px;
+}
+
+.monitor-estado {
+    font-family: var(--fuente-titulo);
     font-size: 1rem;
-    outline: none;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tono);
+    text-shadow: 0 0 10px rgba(var(--tono-rgb), 0.8);
+}
+
+.monitor-nota {
+    margin: 8px 0 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--texto-tenue);
+}
+
+/* Trazo tipo electrocardiograma */
+.trazo {
+    display: block;
     width: 100%;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: border 0.3s, box-shadow 0.3s;
+    height: 38px;
+    margin: 8px 0;
 }
 
-.input-desplegable:focus {
-    border-color: var(--brillo-secundario);
-    box-shadow: 0 0 10px rgba(96, 229, 255, 0.3);
+.trazo path {
+    fill: none;
+    stroke: var(--tono);
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    filter: drop-shadow(0 0 3px var(--tono));
+    animation: trazar 3s linear infinite;
 }
 
-/* Color de fondo oscuro para las opciones al desplegar */
-.input-desplegable option {
-    background: #050b14;
+.trazo-alerta path {
+    animation-duration: 1.6s;
+}
+
+.trazo-espera path {
+    stroke-dasharray: none;
+    opacity: 0.55;
+    animation: parpadeo 2.4s ease-in-out infinite;
+}
+
+/* Lecturas (pares etiqueta / valor) */
+.lecturas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+    margin: 0 0 10px;
+}
+
+.lectura dt {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--texto-tenue);
+}
+
+.lectura dd {
+    margin: 2px 0 0;
+    font-size: 0.95rem;
     color: var(--texto-claro);
 }
 
-/* --- Ventanas Modales --- */
+/* Muestras (especies involucradas) */
+.muestras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.muestra {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px 3px 4px;
+    font-size: 0.78rem;
+    color: var(--texto-claro);
+    background: rgba(var(--tono-rgb), 0.10);
+    border: 1px solid rgba(var(--tono-rgb), 0.4);
+    border-radius: 999px;
+}
+
+.muestra:not(:has(img)) {
+    padding-left: 10px;
+}
+
+.muestra img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@keyframes monitor-encendido {
+    0%   { opacity: 0; transform: scaleY(0.04); filter: brightness(3); }
+    55%  { opacity: 1; transform: scaleY(1.02); filter: brightness(1.6); }
+    100% { opacity: 1; transform: scaleY(1);    filter: brightness(1); }
+}
+
+@keyframes barrido {
+    from { top: -40%; }
+    to   { top: 100%; }
+}
+
+@keyframes trazar {
+    0%   { stroke-dashoffset: 100; opacity: 1; }
+    70%  { stroke-dashoffset: 0;   opacity: 1; }
+    100% { stroke-dashoffset: 0;   opacity: 0.25; }
+}
+
+@keyframes parpadeo {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+}
+
+/* ==========================================================================
+   Ventanas modales
+   ========================================================================== */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(5, 11, 20, 0.85); /* Fondo oscuro semitransparente */
+    background: rgba(2, 8, 14, 0.78); /* Fondo oscuro semitransparente */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .modal-contenido {
@@ -408,14 +1094,14 @@ input[type="number"]::placeholder {
     top: 15px;
     right: 25px;
     font-size: 2.5rem;
-    color: var(--brillo-secundario);
+    color: var(--cian-suave);
     cursor: pointer;
     transition: color 0.3s, text-shadow 0.3s;
 }
 
 .cerrar-modal:hover {
-    color: var(--brillo-principal);
-    text-shadow: 0 0 15px var(--brillo-principal);
+    color: var(--esmeralda-suave);
+    text-shadow: 0 0 15px var(--esmeralda-suave);
 }
 
 .texto-teorico {
@@ -429,7 +1115,7 @@ input[type="number"]::placeholder {
     margin-bottom: 15px;
 }
 
-/* Estilos para la lista del catálogo de especies */
+/* Catálogo de especies */
 .lista-especies {
     display: flex;
     flex-direction: column;
@@ -441,15 +1127,17 @@ input[type="number"]::placeholder {
     display: flex;
     align-items: center;
     gap: 20px;
-    background: rgba(10, 25, 47, 0.5);
-    border: 1px solid var(--borde-cristal);
+    background: rgba(4, 14, 22, 0.55);
+    border: 1px solid rgba(94, 234, 212, 0.22);
     border-radius: 12px;
     padding: 15px;
-    transition: background 0.3s;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .fila-especie:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(34, 211, 238, 0.07);
+    border-color: rgba(103, 232, 249, 0.55);
+    box-shadow: 0 0 14px rgba(34, 211, 238, 0.2);
 }
 
 .fila-especie img {
@@ -457,7 +1145,8 @@ input[type="number"]::placeholder {
     height: 90px;
     border-radius: 8px;
     object-fit: cover;
-    border: 1px solid var(--brillo-secundario);
+    border: 1px solid var(--cian);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
 }
 
 .info-especie {
@@ -468,8 +1157,10 @@ input[type="number"]::placeholder {
 
 .info-especie h3 {
     margin: 0;
-    color: var(--brillo-secundario);
-    font-size: 1.2rem;
+    font-family: var(--fuente-titulo);
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    color: var(--cian-suave);
 }
 
 .info-especie p {
@@ -479,10 +1170,11 @@ input[type="number"]::placeholder {
 }
 
 .info-especie strong {
-    color: #fff;
+    color: var(--esmeralda-suave);
+    font-weight: 600;
 }
 
-/* Estilos para el Manual de Usuario */
+/* Guía rápida */
 .pasos-manual {
     display: flex;
     flex-direction: column;
@@ -494,33 +1186,37 @@ input[type="number"]::placeholder {
     display: flex;
     align-items: center;
     gap: 20px;
-    background: rgba(10, 25, 47, 0.4);
-    border: 1px solid var(--borde-cristal);
+    background: rgba(4, 14, 22, 0.5);
+    border: 1px solid rgba(94, 234, 212, 0.22);
     padding: 15px 25px;
     border-radius: 12px;
-    transition: background 0.3s, box-shadow 0.3s;
+    transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
 .paso:hover {
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 15px rgba(96, 229, 255, 0.1);
+    background: rgba(34, 211, 238, 0.07);
+    border-color: rgba(103, 232, 249, 0.5);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.18);
 }
 
 .numero-paso {
-    font-family: 'Abril Fatface', serif;
-    font-size: 3rem;
+    font-family: var(--fuente-titulo);
+    font-size: 2.6rem;
+    font-weight: 700;
     color: transparent;
-    -webkit-text-stroke: 1px var(--brillo-principal);
-    filter: drop-shadow(0 0 10px var(--brillo-principal));
+    -webkit-text-stroke: 1px var(--esmeralda-suave);
+    filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.6));
     min-width: 50px;
     text-align: center;
 }
 
 .detalle-paso h3 {
     margin: 0 0 5px 0;
-    color: var(--brillo-secundario);
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    font-family: var(--fuente-titulo);
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cian-suave);
 }
 
 .detalle-paso p {
@@ -530,14 +1226,25 @@ input[type="number"]::placeholder {
     line-height: 1.5;
 }
 
-/* --- Responsive: una sola columna en pantallas menores a 1280px --- */
+/* ==========================================================================
+   Responsive y accesibilidad
+   ========================================================================== */
+/* Una sola columna en pantallas menores a 1280px */
 @media (max-width: 1280px) {
     .contenedor-grid { grid-template-columns: 1fr; padding: 20px; }
     .columna-centro { margin-top: 0; }
     .columna-der { align-items: stretch; }
+    .recuadro-resultados { max-height: 70vh; }
 }
 
-/* --- Accesibilidad: respeta la opción de reducir movimiento --- */
+/* Pantallas pequeñas: título más compacto */
+@media (max-width: 720px) {
+    .cabecera { padding: 10px 16px 26px; }
+    .titulo-y2k { font-size: 1.7rem; letter-spacing: 1px; }
+    .menu-flotante { min-width: 220px; }
+}
+
+/* Respeta la opción del sistema de reducir el movimiento */
 @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
 }

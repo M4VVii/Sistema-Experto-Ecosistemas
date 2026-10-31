@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: "piton_bola", nombre: "Pitón Bola", habitat: "Terrestre Tropical", temperamento: "Depredador", temp: "25-32°C", ph: "N/A", espacio: "2800 cm2", tamano: "150 cm", img: "imagenes/pitonbola.webp" }
     ];
 
+    // Catálogo indexado por id (se usa para mostrar nombres e imágenes en los monitores de diagnóstico)
+    const especiesPorId = new Map(especiesJSON.map(especie => [especie.id, especie]));
+
     const contenedorModal = document.getElementById('lista-especies-modal');
 
     especiesJSON.forEach(especie => {
@@ -68,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnEvaluar = document.getElementById('btn-evaluar');
     const inputLitros = document.getElementById('litros');
     const inputArea = document.getElementById('area');
+    const valorLitros = document.getElementById('valor-litros');
+    const valorArea = document.getElementById('valor-area');
     const campoLitros = document.getElementById('campo-litros');
     const campoArea = document.getElementById('campo-area');
     const etiquetaArea = document.getElementById('etiqueta-area');
@@ -76,31 +81,245 @@ document.addEventListener('DOMContentLoaded', () => {
     const espiralCarga = document.getElementById('cargando');
     const contenedorResultados = document.getElementById('resultados-contenido');
     const estrellaCentro = document.getElementById('estrella-resultado');
+    const monitorEspera = document.getElementById('monitor-espera');
+    const monitores = document.getElementById('monitores');
+    const capaTransicion = document.getElementById('fondo-transicion');
 
-    // Muestra los campos de capacidad que corresponden al hábitat elegido:
+    // =====================================================================
+    // FONDOS DINÁMICOS: la clase del <body> cambia según el tipo de ecosistema
+    // =====================================================================
+    const FONDOS = {
+        '': 'fondo-general',
+        acuatico: 'fondo-acuatico',
+        terrestre_tropical: 'fondo-terrestre-tropical',
+        terrestre_desertico: 'fondo-terrestre-desertico',
+        mixto: 'fondo-mixto'
+    };
+    const CLASES_FONDO = Object.values(FONDOS);
+
+    function cambiarFondo(habitat) {
+        const nuevaClase = FONDOS[habitat] || 'fondo-general';
+        if (document.body.classList.contains(nuevaClase)) return;
+
+        // Un background-image no se puede animar con CSS, así que se copia el fondo actual en
+        // una capa fija, se cambia la clase del body y esa capa se desvanece (fundido de 0.5 s).
+        const estilo = getComputedStyle(document.body);
+        capaTransicion.style.transition = 'none';
+        capaTransicion.style.backgroundImage = estilo.backgroundImage;
+        capaTransicion.style.backgroundColor = estilo.backgroundColor;
+        capaTransicion.style.opacity = '1';
+
+        document.body.classList.remove(...CLASES_FONDO);
+        document.body.classList.add(nuevaClase);
+
+        void capaTransicion.offsetWidth; // Fuerza el reflujo para que arranque la transición
+        capaTransicion.style.transition = 'opacity 0.5s ease';
+        capaTransicion.style.opacity = '0';
+    }
+
+    // Cambia el fondo en cuanto el usuario elige una opción del selector
+    inputHabitat.addEventListener('change', () => cambiarFondo(inputHabitat.value));
+
+    // =====================================================================
+    // DESLIZADORES: el valor en texto se actualiza en tiempo real
+    // =====================================================================
+    function formatear(numero) {
+        return Number(numero).toLocaleString('es-MX');
+    }
+
+    function actualizarDeslizador(input, salida, unidad) {
+        const minimo = Number(input.min);
+        const maximo = Number(input.max);
+        const progreso = ((Number(input.value) - minimo) / (maximo - minimo)) * 100;
+        input.style.setProperty('--progreso', progreso + '%'); // Relleno de la pista
+        salida.textContent = formatear(input.value) + ' ' + unidad;
+    }
+
+    inputLitros.addEventListener('input', () => actualizarDeslizador(inputLitros, valorLitros, 'L'));
+    inputArea.addEventListener('input', () => actualizarDeslizador(inputArea, valorArea, 'cm²'));
+
+    actualizarDeslizador(inputLitros, valorLitros, 'L');
+    actualizarDeslizador(inputArea, valorArea, 'cm²');
+
+    // Muestra los deslizadores de capacidad que corresponden al hábitat elegido:
     // acuático -> litros | terrestre -> cm² | mixto -> litros y cm²
     function actualizarCamposCapacidad() {
         const habitat = inputHabitat.value;
 
         if (habitat === 'terrestre_tropical' || habitat === 'terrestre_desertico') {
             campoLitros.style.display = 'none';
-            campoArea.style.display = 'block';
-            etiquetaArea.textContent = 'Área del terrario (cm²):';
-            inputArea.placeholder = 'Ej. 4500';
+            campoArea.style.display = 'flex';
+            etiquetaArea.textContent = 'Área del terrario';
         } else if (habitat === 'mixto') {
-            campoLitros.style.display = 'block';
-            campoArea.style.display = 'block';
-            etiquetaArea.textContent = 'Área de tierra (cm²):';
-            inputArea.placeholder = 'Ej. 2000';
+            campoLitros.style.display = 'flex';
+            campoArea.style.display = 'flex';
+            etiquetaArea.textContent = 'Área de tierra';
         } else {
             // Acuático o sin selección: solo litros
-            campoLitros.style.display = 'block';
+            campoLitros.style.display = 'flex';
             campoArea.style.display = 'none';
         }
     }
 
     inputHabitat.addEventListener('change', actualizarCamposCapacidad);
 
+    // =====================================================================
+    // PANEL DE RESULTADOS: monitores de diagnóstico de laboratorio
+    // =====================================================================
+    const NOMBRES_HABITAT = {
+        acuatico: 'Acuático',
+        terrestre_tropical: 'Terrestre tropical',
+        terrestre_desertico: 'Terrestre desértico',
+        mixto: 'Mixto (paludario)'
+    };
+
+    // Mensajes que devuelve el motor de Prolog -> etiqueta, código y texto para mostrar
+    const TIPOS_CONFLICTO = {
+        'Riesgo de depredacion': { codigo: 'DEP', etiqueta: 'Depredación', texto: 'Riesgo de depredación' },
+        'Conflicto por agresion o territorialidad': { codigo: 'AGR', etiqueta: 'Agresión / territorio', texto: 'Conflicto por agresión o territorialidad' },
+        'Incompatibilidad de temperatura': { codigo: 'TMP', etiqueta: 'Temperatura', texto: 'Incompatibilidad de temperatura' },
+        'Incompatibilidad de pH o humedad': { codigo: 'QUI', etiqueta: 'Químico', texto: 'Incompatibilidad de pH o humedad' },
+        'Especie incompatible con el tipo de tanque': { codigo: 'HAB', etiqueta: 'Hábitat', texto: 'Especie incompatible con el tipo de tanque' },
+        'Falta de espacio (Hacinamiento)': { codigo: 'ESP', etiqueta: 'Espacio', texto: 'Falta de espacio (hacinamiento)' }
+    };
+
+    let numeroDiagnostico = 0;
+
+    function crearElemento(etiqueta, clase, texto) {
+        const elemento = document.createElement(etiqueta);
+        if (clase) elemento.className = clase;
+        if (texto !== undefined) elemento.textContent = texto;
+        return elemento;
+    }
+
+    // Trazo tipo electrocardiograma (el SVG se arma con texto fijo, nunca con datos del servidor)
+    function crearTrazo(tipo) {
+        const rutas = {
+            ok: 'M0 20 L34 20 L40 20 L46 6 L54 34 L60 20 L100 20 L106 20 L112 12 L118 20 L160 20 L166 20 L172 4 L180 36 L186 20 L200 20',
+            alerta: 'M0 20 L14 20 L20 8 L26 32 L32 4 L40 36 L48 14 L56 28 L64 20 L88 20 L94 6 L100 34 L108 10 L116 30 L124 20 L150 20 L156 2 L164 38 L172 12 L180 28 L188 20 L200 20'
+        };
+        const ns = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('viewBox', '0 0 200 40');
+        svg.setAttribute('preserveAspectRatio', 'none');
+        svg.setAttribute('class', 'trazo trazo-' + tipo);
+        svg.setAttribute('aria-hidden', 'true');
+        const ruta = document.createElementNS(ns, 'path');
+        ruta.setAttribute('d', rutas[tipo]);
+        ruta.setAttribute('pathLength', '100');
+        svg.appendChild(ruta);
+        return svg;
+    }
+
+    function crearBarra(titulo, codigo) {
+        const barra = crearElemento('div', 'monitor-barra');
+        barra.appendChild(crearElemento('span', 'led'));
+        barra.appendChild(crearElemento('span', 'monitor-titulo', titulo));
+        barra.appendChild(crearElemento('span', 'monitor-codigo', codigo));
+        return barra;
+    }
+
+    function crearLecturas(pares) {
+        const lista = crearElemento('dl', 'lecturas');
+        pares.forEach(([nombre, valor]) => {
+            const fila = crearElemento('div', 'lectura');
+            fila.appendChild(crearElemento('dt', null, nombre));
+            fila.appendChild(crearElemento('dd', null, valor));
+            lista.appendChild(fila);
+        });
+        return lista;
+    }
+
+    // Las especies involucradas pueden llegar como lista (["pez_oscar", "pez_guppy"])
+    // o como texto ("involucrados(pez_oscar,pez_guppy)")
+    function normalizarInvolucrados(involucrados) {
+        if (Array.isArray(involucrados)) return involucrados.map(String);
+        if (typeof involucrados === 'string') {
+            return (involucrados.match(/[a-z0-9_]+/g) || []).filter(id => id !== 'involucrados');
+        }
+        return [];
+    }
+
+    function crearMuestras(ids) {
+        const contenedor = crearElemento('div', 'muestras');
+        ids.forEach(id => {
+            const chip = crearElemento('span', 'muestra');
+            const especie = especiesPorId.get(id);
+            if (id === 'todos') {
+                chip.textContent = 'Todas las especies';
+            } else if (especie) {
+                const imagen = document.createElement('img');
+                imagen.src = especie.img;
+                imagen.alt = '';
+                chip.appendChild(imagen);
+                chip.appendChild(crearElemento('span', null, especie.nombre));
+            } else {
+                chip.textContent = id;
+            }
+            contenedor.appendChild(chip);
+        });
+        return contenedor;
+    }
+
+    function textoCapacidad(contexto) {
+        if (contexto.habitat === 'acuatico') return formatear(contexto.litros) + ' L';
+        if (contexto.habitat === 'mixto') return formatear(contexto.litros) + ' L · ' + formatear(contexto.area) + ' cm²';
+        return formatear(contexto.area) + ' cm²';
+    }
+
+    // Dibuja el monitor principal (veredicto) y un monitor de alerta por cada conflicto
+    function mostrarResultados(data, contexto) {
+        monitores.replaceChildren();
+        monitorEspera.style.display = 'none';
+
+        const conflictos = Array.isArray(data.conflictos) ? data.conflictos : [];
+        const viable = Boolean(data.viable);
+        numeroDiagnostico += 1;
+
+        // Monitor principal: veredicto del diagnóstico
+        const principal = crearElemento('div', 'monitor ' + (viable ? 'monitor-ok' : 'monitor-alerta'));
+        principal.appendChild(crearBarra('Bio-Scan · Diagnóstico', 'DX-' + String(numeroDiagnostico).padStart(4, '0')));
+        const cuerpo = crearElemento('div', 'monitor-cuerpo');
+        cuerpo.appendChild(crearElemento('div', 'monitor-estado', viable ? 'Ecosistema estable' : 'Ecosistema no viable'));
+        cuerpo.appendChild(crearTrazo(viable ? 'ok' : 'alerta'));
+        cuerpo.appendChild(crearLecturas([
+            ['Hábitat', NOMBRES_HABITAT[contexto.habitat] || contexto.habitat],
+            ['Capacidad', textoCapacidad(contexto)],
+            ['Especies', String(contexto.especies.length)],
+            ['Conflictos', String(conflictos.length)]
+        ]));
+        cuerpo.appendChild(crearMuestras(contexto.especies));
+        principal.appendChild(cuerpo);
+        monitores.appendChild(principal);
+
+        // Un monitor de alerta por cada conflicto
+        conflictos.forEach((conflicto, indice) => {
+            const mensaje = conflicto && conflicto.mensaje ? String(conflicto.mensaje) : 'Conflicto detectado';
+            const tipo = TIPOS_CONFLICTO[mensaje] || { codigo: 'ERR', etiqueta: 'Conflicto', texto: mensaje };
+
+            const tarjeta = crearElemento('div', 'monitor monitor-alerta');
+            tarjeta.style.setProperty('--retraso', (0.15 * (indice + 1)) + 's');
+            tarjeta.appendChild(crearBarra('Alerta · ' + tipo.etiqueta, tipo.codigo + '-' + String(indice + 1).padStart(2, '0')));
+
+            const cuerpoAlerta = crearElemento('div', 'monitor-cuerpo');
+            cuerpoAlerta.appendChild(crearElemento('div', 'monitor-estado', tipo.texto));
+            cuerpoAlerta.appendChild(crearTrazo('alerta'));
+            cuerpoAlerta.appendChild(crearMuestras(normalizarInvolucrados(conflicto && conflicto.involucrados)));
+            tarjeta.appendChild(cuerpoAlerta);
+            monitores.appendChild(tarjeta);
+        });
+    }
+
+    // Reinicia una animación CSS (para que el mensaje central vuelva a aparecer en cada evaluación)
+    function reiniciarAnimacion(elemento) {
+        elemento.style.animation = 'none';
+        void elemento.offsetWidth;
+        elemento.style.animation = '';
+    }
+
+    // =====================================================================
+    // EVALUAR
+    // =====================================================================
     btnEvaluar.addEventListener('click', () => {
         const habitat = inputHabitat.value;
         const litros = parseInt(inputLitros.value);
@@ -173,47 +392,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Mostrar la estrella central (empieza oculta con display: none en el HTML)
             estrellaCentro.style.display = 'block';
+            reiniciarAnimacion(estrellaCentro);
             
-            // Limpiar resultados anteriores en el cuadro derecho
-            let contenedorDetalles = document.getElementById('detallesResultados');
-            if (!contenedorDetalles) {
-                // Si no existe el contenedor dinámico, lo creamos dentro de contenedorResultados
-                contenedorDetalles = document.createElement('div');
-                contenedorDetalles.id = 'detallesResultados';
-                contenedorResultados.appendChild(contenedorDetalles);
-            }
-
-            if (data.viable) {
+            if(data.viable) {
                 estrellaCentro.textContent = "Ecosistema Viable";
-                estrellaCentro.style.color = "#4CAF50";
-
-                contenedorDetalles.innerHTML = `
-                    <div style="background: rgba(76, 175, 80, 0.15); border: 1px solid #4CAF50; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left;">
-                        <h4 style="color: #4CAF50; margin-top: 0;">✔ Hábitat en Equilibrio</h4>
-                        <p style="color: #e0e0e0; margin-bottom: 0;">Todas las especies seleccionadas son compatibles entre sí y cuentan con el espacio/parámetros adecuados en el tanque.</p>
-                    </div>
-                `;
+                estrellaCentro.style.color = "#34d399";
             } else {
                 estrellaCentro.textContent = "Conflictos Encontrados";
-                estrellaCentro.style.color = "#F44336";
-
-                let htmlConflictos = '<div style="margin-top: 15px; text-align: left;">';
-                data.conflictos.forEach(c => {
-                    const involucradosTexto = Array.isArray(c.involucrados) 
-                        ? c.involucrados.join(', ') 
-                        : c.involucrados;
-
-                    htmlConflictos += `
-                        <div style="background: rgba(244, 67, 54, 0.15); border-left: 4px solid #F44336; border-radius: 6px; padding: 12px; margin-bottom: 10px;">
-                            <strong style="color: #FF5252; font-size: 1.05em; display: block; margin-bottom: 4px;">⚠️ ${c.mensaje}</strong>
-                            <span style="color: #bbb; font-size: 0.9em;">Involucrados: <code style="color: #FFD54F; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">${involucradosTexto}</code></span>
-                        </div>
-                    `;
-                });
-                htmlConflictos += '</div>';
-
-                contenedorDetalles.innerHTML = htmlConflictos;
+                estrellaCentro.style.color = "#ff4d6d";
             }
+
+            // Monitores de diagnóstico en el panel de Resultados (solo dibuja; no toca la petición)
+            mostrarResultados(data, { habitat, litros, area, especies: especiesSeleccionadas });
         })
         .catch(error => {
             if(espiralCarga) espiralCarga.style.display = 'none';
@@ -226,9 +416,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnLimpiar.addEventListener('click', () => {
         inputHabitat.value = '';
-        inputLitros.value = '';
-        inputArea.value = '';
-        actualizarCamposCapacidad(); // Vuelve a mostrar solo el campo de litros
+        inputLitros.value = inputLitros.defaultValue;
+        inputArea.value = inputArea.defaultValue;
+        actualizarDeslizador(inputLitros, valorLitros, 'L');
+        actualizarDeslizador(inputArea, valorArea, 'cm²');
+        actualizarCamposCapacidad(); // Vuelve a mostrar solo el deslizador de litros
+        cambiarFondo('');            // Vuelve al fondo general
 
         const tarjetasActivas = document.querySelectorAll('.tarjeta-especie.seleccionada');
         tarjetasActivas.forEach(tarjeta => {
@@ -237,7 +430,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         msgError.style.display = 'none';
         contenedorResultados.style.display = 'none';
+        monitores.replaceChildren();
+        monitorEspera.style.display = 'block';
         if(estrellaCentro) estrellaCentro.style.display = 'none';
+    });
+
+    // =====================================================================
+    // MENÚ FLOTANTE: el interruptor del título lo despliega y lo oculta
+    // =====================================================================
+    const btnMenu = document.getElementById('btn-menu');
+    const menuFlotante = document.getElementById('menu-flotante');
+
+    function alternarMenu(abrir) {
+        const mostrar = (typeof abrir === 'boolean') ? abrir : !menuFlotante.classList.contains('abierto');
+        menuFlotante.classList.toggle('abierto', mostrar);
+        btnMenu.setAttribute('aria-expanded', String(mostrar));
+        btnMenu.setAttribute('aria-label', mostrar ? 'Ocultar menú' : 'Mostrar menú');
+    }
+
+    btnMenu.addEventListener('click', () => alternarMenu());
+
+    // El menú se cierra al elegir una opción, al hacer clic fuera de él o con la tecla Escape
+    menuFlotante.querySelectorAll('a').forEach(enlace => {
+        enlace.addEventListener('click', () => alternarMenu(false));
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.bloque-titulo')) alternarMenu(false);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') alternarMenu(false);
     });
 
     const btnEspecies = document.getElementById('link-especies');
