@@ -1,31 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. JSON actualizado con identificadores válidos para Prolog y formato WebP
+    //    "clase" coincide con el campo clase de hechos.pl: pez | anfibio | reptil | invertebrado
     const especiesJSON = [
-      { id: "pez_guppy", nombre: "Pez Guppy", habitat: "Acuático", temperamento: "Pacífico", temp: "22-28°C", ph: "6.8-7.8", espacio: "20 L", tamano: "6 cm", img: "imagenes/pezguppy.webp" },
-      { id: "tetra_neon", nombre: "Tetra Neón", habitat: "Acuático", temperamento: "Pacífico", temp: "20-26°C", ph: "5.0-7.0", espacio: "40 L", tamano: "4 cm", img: "imagenes/tetraneon.webp" },
-      { id: "corydora", nombre: "Corydora", habitat: "Acuático", temperamento: "Pacífico", temp: "22-26°C", ph: "6.0-7.8", espacio: "60 L", tamano: "7 cm", img: "imagenes/corydora.webp" },
-      { id: "camaron_cereza", nombre: "Camarón Cereza", habitat: "Acuático", temperamento: "Pacífico", temp: "18-28°C", ph: "6.5-8.0", espacio: "20 L", tamano: "4 cm", img: "imagenes/camaroncereza.webp" },
-      { id: "pez_betta", nombre: "Pez Betta", habitat: "Acuático", temperamento: "Territorial", temp: "24-28°C", ph: "6.0-7.5", espacio: "20 L", tamano: "7 cm", img: "imagenes/pezbetta.webp" },
-      { id: "pez_oscar", nombre: "Pez Oscar", habitat: "Acuático", temperamento: "Depredador", temp: "22-28°C", ph: "6.0-7.5", espacio: "400 L", tamano: "35 cm", img: "imagenes/pezoscar.webp" },
-      { id: "ciclido_convicto", nombre: "Cíclido Convicto", habitat: "Acuático", temperamento: "Agresivo", temp: "22-28°C", ph: "6.5-8.0", espacio: "150 L", tamano: "15 cm", img: "imagenes/ciclidoconvicto.webp" },
-      { id: "pirana_vientre_rojo", nombre: "Piraña Vientre Rojo", habitat: "Acuático", temperamento: "Depredador", temp: "24-28°C", ph: "6.0-7.5", espacio: "400 L", tamano: "30 cm", img: "imagenes/piranavientrerojo.webp" },
-      { id: "goldfish", nombre: "Goldfish", habitat: "Acuático", temperamento: "Pacífico", temp: "15-24°C", ph: "6.5-8.0", espacio: "150 L", tamano: "30 cm", img: "imagenes/goldfish.webp" },
-      { id: "ajolote", nombre: "Ajolote", habitat: "Acuático", temperamento: "Depredador", temp: "14-20°C", ph: "6.5-8.0", espacio: "150 L", tamano: "30 cm", img: "imagenes/ajolote.webp" },
-      { id: "rana_flecha", nombre: "Rana Flecha", habitat: "Terrestre Tropical", temperamento: "Territorial", temp: "22-27°C", ph: "N/A", espacio: "400 cm2", tamano: "5 cm", img: "imagenes/ranaflecha.webp" },
-      { id: "rana_ojos_rojos", nombre: "Rana Ojos Rojos", habitat: "Terrestre Tropical", temperamento: "Pacífico", temp: "22-28°C", ph: "N/A", espacio: "1300 cm2", tamano: "7 cm", img: "imagenes/ranaojosrojos.webp" },
-      { id: "sapo_vientre_fuego", nombre: "Sapo Vientre Fuego", habitat: "Mixto", temperamento: "Pacífico", temp: "18-24°C", ph: "6.5-7.5", espacio: "40 L y 400 cm2", tamano: "5 cm", img: "imagenes/sapovientrefuego.webp" },
-      { id: "salamandra_tigre", nombre: "Salamandra Tigre", habitat: "Mixto", temperamento: "Depredador", temp: "15-22°C", ph: "6.5-7.5", espacio: "75 L y 750 cm2", tamano: "25 cm", img: "imagenes/salamandratigre.webp" },
-      { id: "tortuga_orejas_rojas", nombre: "Tortuga Orejas Rojas", habitat: "Mixto", temperamento: "Depredador", temp: "22-28°C", ph: "6.5-8.0", espacio: "300 L y 3000 cm2", tamano: "30 cm", img: "imagenes/tortugaorejasrojas.webp" },
-      { id: "iguana_verde", nombre: "Iguana Verde", habitat: "Terrestre Tropical", temperamento: "Pacífico", temp: "24-32°C", ph: "N/A", espacio: "40000 cm2", tamano: "180 cm", img: "imagenes/iguanaverde.webp" },
-      { id: "gecko_crestado", nombre: "Gecko Crestado", habitat: "Terrestre Tropical", temperamento: "Pacífico", temp: "22-27°C", ph: "N/A", espacio: "750 cm2", tamano: "20 cm", img: "imagenes/geckocrestado.webp" },
-      { id: "camaleon_velo", nombre: "Camaleón Velo", habitat: "Terrestre Tropical", temperamento: "Territorial", temp: "24-29°C", ph: "N/A", espacio: "4500 cm2", tamano: "60 cm", img: "imagenes/camaleonvelo.webp" },
-      { id: "anolis_verde", nombre: "Anolis Verde", habitat: "Terrestre Tropical", temperamento: "Territorial", temp: "22-30°C", ph: "N/A", espacio: "750 cm2", tamano: "20 cm", img: "imagenes/anolisverde.webp" },
-      { id: "dragon_barbudo", nombre: "Dragón Barbudo", habitat: "Terrestre Desértico", temperamento: "Pacífico", temp: "24-35°C", ph: "N/A", espacio: "4500 cm2", tamano: "55 cm", img: "imagenes/dragonbarbudo.webp" },
-      { id: "gecko_leopardo", nombre: "Gecko Leopardo", habitat: "Terrestre Desértico", temperamento: "Pacífico", temp: "24-32°C", ph: "N/A", espacio: "1100 cm2", tamano: "25 cm", img: "imagenes/geckoleopardo.webp" },
-      { id: "uromastyx", nombre: "Uromastyx", habitat: "Terrestre Desértico", temperamento: "Pacífico", temp: "27-40°C", ph: "N/A", espacio: "4500 cm2", tamano: "40 cm", img: "imagenes/uromastyx.webp" },
-      { id: "serpiente_maiz", nombre: "Serpiente Maíz", habitat: "Terrestre Tropical", temperamento: "Depredador", temp: "22-28°C", ph: "N/A", espacio: "1500 cm2", tamano: "150 cm", img: "imagenes/serpientemaiz.webp" },
-      { id: "piton_bola", nombre: "Pitón Bola", habitat: "Terrestre Tropical", temperamento: "Depredador", temp: "25-32°C", ph: "N/A", espacio: "2800 cm2", tamano: "150 cm", img: "imagenes/pitonbola.webp" }
+      { id: "pez_guppy", clase: "pez", nombre: "Pez Guppy", habitat: "Acuático", temperamento: "Pacífico", temp: "22-28°C", ph: "6.8-7.8", espacio: "20 L", tamano: "6 cm", img: "imagenes/pezguppy.webp" },
+      { id: "tetra_neon", clase: "pez", nombre: "Tetra Neón", habitat: "Acuático", temperamento: "Pacífico", temp: "20-26°C", ph: "5.0-7.0", espacio: "40 L", tamano: "4 cm", img: "imagenes/tetraneon.webp" },
+      { id: "corydora", clase: "pez", nombre: "Corydora", habitat: "Acuático", temperamento: "Pacífico", temp: "22-26°C", ph: "6.0-7.8", espacio: "60 L", tamano: "7 cm", img: "imagenes/corydora.webp" },
+      { id: "camaron_cereza", clase: "invertebrado", nombre: "Camarón Cereza", habitat: "Acuático", temperamento: "Pacífico", temp: "18-28°C", ph: "6.5-8.0", espacio: "20 L", tamano: "4 cm", img: "imagenes/camaroncereza.webp" },
+      { id: "pez_betta", clase: "pez", nombre: "Pez Betta", habitat: "Acuático", temperamento: "Territorial", temp: "24-28°C", ph: "6.0-7.5", espacio: "20 L", tamano: "7 cm", img: "imagenes/pezbetta.webp" },
+      { id: "pez_oscar", clase: "pez", nombre: "Pez Oscar", habitat: "Acuático", temperamento: "Depredador", temp: "22-28°C", ph: "6.0-7.5", espacio: "400 L", tamano: "35 cm", img: "imagenes/pezoscar.webp" },
+      { id: "ciclido_convicto", clase: "pez", nombre: "Cíclido Convicto", habitat: "Acuático", temperamento: "Agresivo", temp: "22-28°C", ph: "6.5-8.0", espacio: "150 L", tamano: "15 cm", img: "imagenes/ciclidoconvicto.webp" },
+      { id: "pirana_vientre_rojo", clase: "pez", nombre: "Piraña Vientre Rojo", habitat: "Acuático", temperamento: "Depredador", temp: "24-28°C", ph: "6.0-7.5", espacio: "400 L", tamano: "30 cm", img: "imagenes/piranavientrerojo.webp" },
+      { id: "goldfish", clase: "pez", nombre: "Goldfish", habitat: "Acuático", temperamento: "Pacífico", temp: "15-24°C", ph: "6.5-8.0", espacio: "150 L", tamano: "30 cm", img: "imagenes/goldfish.webp" },
+      { id: "ajolote", clase: "anfibio", nombre: "Ajolote", habitat: "Acuático", temperamento: "Depredador", temp: "14-20°C", ph: "6.5-8.0", espacio: "150 L", tamano: "30 cm", img: "imagenes/ajolote.webp" },
+      { id: "rana_flecha", clase: "anfibio", nombre: "Rana Flecha", habitat: "Terrestre Tropical", temperamento: "Territorial", temp: "22-27°C", ph: "N/A", espacio: "400 cm2", tamano: "5 cm", img: "imagenes/ranaflecha.webp" },
+      { id: "rana_ojos_rojos", clase: "anfibio", nombre: "Rana Ojos Rojos", habitat: "Terrestre Tropical", temperamento: "Pacífico", temp: "22-28°C", ph: "N/A", espacio: "1300 cm2", tamano: "7 cm", img: "imagenes/ranaojosrojos.webp" },
+      { id: "sapo_vientre_fuego", clase: "anfibio", nombre: "Sapo Vientre Fuego", habitat: "Mixto", temperamento: "Pacífico", temp: "18-24°C", ph: "6.5-7.5", espacio: "40 L y 400 cm2", tamano: "5 cm", img: "imagenes/sapovientrefuego.webp" },
+      { id: "salamandra_tigre", clase: "anfibio", nombre: "Salamandra Tigre", habitat: "Mixto", temperamento: "Depredador", temp: "15-22°C", ph: "6.5-7.5", espacio: "75 L y 750 cm2", tamano: "25 cm", img: "imagenes/salamandratigre.webp" },
+      { id: "tortuga_orejas_rojas", clase: "reptil", nombre: "Tortuga Orejas Rojas", habitat: "Mixto", temperamento: "Depredador", temp: "22-28°C", ph: "6.5-8.0", espacio: "300 L y 3000 cm2", tamano: "30 cm", img: "imagenes/tortugaorejasrojas.webp" },
+      { id: "iguana_verde", clase: "reptil", nombre: "Iguana Verde", habitat: "Terrestre Tropical", temperamento: "Pacífico", temp: "24-32°C", ph: "N/A", espacio: "40000 cm2", tamano: "180 cm", img: "imagenes/iguanaverde.webp" },
+      { id: "gecko_crestado", clase: "reptil", nombre: "Gecko Crestado", habitat: "Terrestre Tropical", temperamento: "Pacífico", temp: "22-27°C", ph: "N/A", espacio: "750 cm2", tamano: "20 cm", img: "imagenes/geckocrestado.webp" },
+      { id: "camaleon_velo", clase: "reptil", nombre: "Camaleón Velo", habitat: "Terrestre Tropical", temperamento: "Territorial", temp: "24-29°C", ph: "N/A", espacio: "4500 cm2", tamano: "60 cm", img: "imagenes/camaleonvelo.webp" },
+      { id: "anolis_verde", clase: "reptil", nombre: "Anolis Verde", habitat: "Terrestre Tropical", temperamento: "Territorial", temp: "22-30°C", ph: "N/A", espacio: "750 cm2", tamano: "20 cm", img: "imagenes/anolisverde.webp" },
+      { id: "dragon_barbudo", clase: "reptil", nombre: "Dragón Barbudo", habitat: "Terrestre Desértico", temperamento: "Pacífico", temp: "24-35°C", ph: "N/A", espacio: "4500 cm2", tamano: "55 cm", img: "imagenes/dragonbarbudo.webp" },
+      { id: "gecko_leopardo", clase: "reptil", nombre: "Gecko Leopardo", habitat: "Terrestre Desértico", temperamento: "Pacífico", temp: "24-32°C", ph: "N/A", espacio: "1100 cm2", tamano: "25 cm", img: "imagenes/geckoleopardo.webp" },
+      { id: "uromastyx", clase: "reptil", nombre: "Uromastyx", habitat: "Terrestre Desértico", temperamento: "Pacífico", temp: "27-40°C", ph: "N/A", espacio: "4500 cm2", tamano: "40 cm", img: "imagenes/uromastyx.webp" },
+      { id: "serpiente_maiz", clase: "reptil", nombre: "Serpiente Maíz", habitat: "Terrestre Tropical", temperamento: "Depredador", temp: "22-28°C", ph: "N/A", espacio: "1500 cm2", tamano: "150 cm", img: "imagenes/serpientemaiz.webp" },
+      { id: "piton_bola", clase: "reptil", nombre: "Pitón Bola", habitat: "Terrestre Tropical", temperamento: "Depredador", temp: "25-32°C", ph: "N/A", espacio: "2800 cm2", tamano: "150 cm", img: "imagenes/pitonbola.webp" }
     ];
 
     // Catálogo indexado por id (se usa para mostrar nombres e imágenes en los monitores de diagnóstico)
@@ -49,12 +50,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     const cuadricula = document.getElementById('cuadricula');
-    cuadricula.innerHTML = ''; 
 
-    especiesJSON.forEach(especie => {
+    // Tarjetas ya creadas (id -> elemento). Las tarjetas se mantienen en el DOM aunque estén
+    // ocultas por un filtro, así la selección del usuario se conserva al cambiar de pestaña.
+    const tarjetasPorId = new Map();
+
+    // Categorías que el "filtro inteligente" bloquea según el tipo de ecosistema
+    let categoriasBloqueadas = new Set();
+
+    function crearTarjeta(especie) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-especie';
         tarjeta.dataset.id = especie.id; 
+        tarjeta.dataset.clase = especie.clase;
         
         tarjeta.innerHTML = `
             <img src="${especie.img}" alt="${especie.nombre}">
@@ -65,8 +73,31 @@ document.addEventListener('DOMContentLoaded', () => {
             tarjeta.classList.toggle('seleccionada');
         });
 
-        cuadricula.appendChild(tarjeta);
-    });
+        return tarjeta;
+    }
+
+    // Renderiza las tarjetas (la primera vez las crea) y aplica un filtro por clase:
+    // 'todos' | 'pez' | 'anfibio' | 'reptil' | 'invertebrado'.
+    // En "todos" no se muestran las clases bloqueadas por el tipo de ecosistema.
+    function renderizarTarjetas(filtro = 'todos') {
+        if (tarjetasPorId.size === 0) {
+            cuadricula.innerHTML = '';
+            especiesJSON.forEach(especie => {
+                const tarjeta = crearTarjeta(especie);
+                tarjetasPorId.set(especie.id, tarjeta);
+                cuadricula.appendChild(tarjeta);
+            });
+        }
+
+        especiesJSON.forEach(especie => {
+            const visible = (filtro === 'todos')
+                ? !categoriasBloqueadas.has(especie.clase)
+                : especie.clase === filtro;
+            tarjetasPorId.get(especie.id).hidden = !visible;
+        });
+    }
+
+    renderizarTarjetas('todos');
 
     const btnEvaluar = document.getElementById('btn-evaluar');
     const inputLitros = document.getElementById('litros');
@@ -162,6 +193,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     inputHabitat.addEventListener('change', actualizarCamposCapacidad);
+
+    // =====================================================================
+    // PESTAÑAS TAXONÓMICAS + FILTRO INTELIGENTE
+    // =====================================================================
+    const pestanas = document.querySelectorAll('.pestana');
+    let categoriaActiva = 'todos';
+
+    // Categorías bloqueadas según el tipo de ecosistema.
+    // Acuático, desértico y mixto siguen lo pedido; terrestre tropical bloquea las clases
+    // que no tienen ninguna especie compatible con ese terrario (peces e invertebrados acuáticos).
+    const CATEGORIAS_BLOQUEADAS = {
+        '': [],
+        acuatico: ['reptil'],
+        terrestre_tropical: ['pez', 'invertebrado'],
+        terrestre_desertico: ['pez', 'anfibio'],
+        mixto: []
+    };
+
+    function activarPestana(categoria) {
+        categoriaActiva = categoria;
+        pestanas.forEach(pestana => {
+            const activa = pestana.dataset.categoria === categoria;
+            pestana.classList.toggle('activa', activa);
+            pestana.setAttribute('aria-selected', String(activa));
+        });
+        renderizarTarjetas(categoria);
+    }
+
+    pestanas.forEach(pestana => {
+        pestana.addEventListener('click', () => {
+            if (pestana.disabled) return;
+            activarPestana(pestana.dataset.categoria);
+        });
+    });
+
+    // Bloquea/habilita las pestañas según el ecosistema elegido
+    function aplicarFiltroInteligente() {
+        categoriasBloqueadas = new Set(CATEGORIAS_BLOQUEADAS[inputHabitat.value] || []);
+
+        pestanas.forEach(pestana => {
+            const bloqueada = categoriasBloqueadas.has(pestana.dataset.categoria);
+            pestana.disabled = bloqueada;
+            pestana.classList.toggle('bloqueada', bloqueada);
+            pestana.title = bloqueada ? 'No disponible en este ecosistema' : '';
+        });
+
+        // Una especie de una clase bloqueada ya no es válida: se quita de la selección
+        // (si no, quedaría oculta pero seguiría enviándose a la API)
+        especiesJSON.forEach(especie => {
+            if (categoriasBloqueadas.has(especie.clase)) {
+                tarjetasPorId.get(especie.id).classList.remove('seleccionada');
+            }
+        });
+
+        // Si la pestaña activa quedó bloqueada, se vuelve a "Todos"
+        activarPestana(categoriasBloqueadas.has(categoriaActiva) ? 'todos' : categoriaActiva);
+    }
+
+    inputHabitat.addEventListener('change', aplicarFiltroInteligente);
 
     // =====================================================================
     // PANEL DE RESULTADOS: monitores de diagnóstico de laboratorio
@@ -421,6 +511,8 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarDeslizador(inputLitros, valorLitros, 'L');
         actualizarDeslizador(inputArea, valorArea, 'cm²');
         actualizarCamposCapacidad(); // Vuelve a mostrar solo el deslizador de litros
+        aplicarFiltroInteligente();  // Habilita todas las pestañas
+        activarPestana('todos');     // Y vuelve a la pestaña "Todos"
         cambiarFondo('');            // Vuelve al fondo general
 
         const tarjetasActivas = document.querySelectorAll('.tarjeta-especie.seleccionada');

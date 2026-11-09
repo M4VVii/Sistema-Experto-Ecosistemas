@@ -589,9 +589,17 @@ input[type="range"]::-moz-range-thumb {
 /* ==========================================================================
    Selección de especies
    ========================================================================== */
+/* El encabezado (título + pestañas) queda fijo y solo la cuadrícula de tarjetas hace scroll */
 .contenedor-especies {
-    max-height: 450px;
-    overflow-y: auto;
+    max-height: 520px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.contenedor-especies h3,
+.pestanas-especies {
+    flex-shrink: 0;
 }
 
 .contenedor-especies h3 {
@@ -603,12 +611,100 @@ input[type="range"]::-moz-range-thumb {
     color: var(--cian-suave);
 }
 
-/* Cuadrícula adaptable */
+/* ==========================================================================
+   Pestañas por clase taxonómica: interruptores de un panel de laboratorio
+   ========================================================================== */
+.pestanas-especies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 14px 0 4px;
+}
+
+.pestana {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 9px 6px 8px;
+    font-family: var(--fuente-datos);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--texto-tenue);                 /* Inactiva: texto tenue */
+    background: rgba(4, 14, 22, 0.45);        /* translúcida */
+    border: 1px solid rgba(94, 234, 212, 0.20); /* borde sutil */
+    border-radius: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease,
+                box-shadow 0.3s ease, text-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+/* Piloto del interruptor: apagado cuando la pestaña está inactiva */
+.pestana::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(143, 179, 191, 0.35);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pestana-icono {
+    font-size: 0.85rem;
+    line-height: 1;
+    filter: grayscale(1) opacity(0.65);        /* El emoji se apaga cuando está inactiva */
+    transition: filter 0.3s ease;
+}
+
+.pestana:hover:not(:disabled):not(.activa),
+.pestana:focus-visible {
+    color: var(--texto-claro);
+    border-color: rgba(103, 232, 249, 0.50);
+    background: rgba(34, 211, 238, 0.07);
+    outline: none;
+}
+
+/* Activa: resplandor de neón cian y texto brillante */
+.pestana.activa {
+    color: #ffffff;
+    background: rgba(34, 211, 238, 0.14);
+    border-color: var(--cian);
+    text-shadow: 0 0 8px rgba(103, 232, 249, 0.9);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.55), inset 0 0 10px rgba(34, 211, 238, 0.18);
+}
+
+.pestana.activa::before {
+    background: var(--cian-suave);
+    box-shadow: 0 0 6px var(--cian), 0 0 12px var(--cian);
+}
+
+.pestana.activa .pestana-icono {
+    filter: none;
+}
+
+/* Bloqueada por el filtro inteligente: atenuada, con rayas y sin interacción */
+.pestana:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 4px, transparent 4px 8px), rgba(4, 14, 22, 0.45);
+    border-style: dashed;
+}
+
+.pestana:disabled .pestana-icono {
+    filter: grayscale(1) opacity(0.5);
+}
+
+/* Cuadrícula adaptable (es la zona que se desplaza) */
 .tarjetas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 15px;
-    margin-top: 15px;
+    flex: 1 1 auto;
+    min-height: 0;          /* Permite el scroll interno dentro del panel flex */
+    overflow-y: auto;
+    margin: 4px -8px 0;     /* El relleno deja espacio para el resplandor de las tarjetas */
+    padding: 10px 8px;
+    align-content: start;
 }
 
 /* Tarjeta individual */
@@ -623,6 +719,17 @@ input[type="range"]::-moz-range-thumb {
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    animation: entrada-tarjeta 0.35s ease both; /* Se reinicia cada vez que una tarjeta vuelve a mostrarse */
+}
+
+/* El atributo hidden lo usa el filtro por pestañas (display:flex lo anularía sin esta regla) */
+.tarjeta-especie[hidden] {
+    display: none;
+}
+
+@keyframes entrada-tarjeta {
+    from { opacity: 0; translate: 0 8px; }
+    to   { opacity: 1; translate: 0 0; }
 }
 
 .tarjeta-especie img {
@@ -688,7 +795,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* Scrollbar para Firefox (los navegadores con ::-webkit-scrollbar siguen usando el diseño de arriba) */
 @supports not selector(::-webkit-scrollbar) {
-    .contenedor-especies, .zona-scroll-resultados, .modal-contenido {
+    .tarjetas-grid, .zona-scroll-resultados, .modal-contenido {
         scrollbar-width: thin;
         scrollbar-color: var(--cian) rgba(2, 10, 16, 0.75);
     }

@@ -74,7 +74,27 @@
     <!-- Caja 3: Especies -->
     <div class="caja-cristal contenedor-especies">
         <h3>Selecciona las especies</h3>
-        <div id="cuadricula" class="tarjetas-grid">
+
+        <!-- Pestañas por clase taxonómica (interruptores del panel) -->
+        <div class="pestanas-especies" role="tablist" aria-label="Categorías de especies">
+            <button type="button" class="pestana activa" role="tab" aria-selected="true" aria-controls="cuadricula" data-categoria="todos">
+                <span class="pestana-icono" aria-hidden="true">🧬</span>Todos
+            </button>
+            <button type="button" class="pestana" role="tab" aria-selected="false" aria-controls="cuadricula" data-categoria="pez">
+                <span class="pestana-icono" aria-hidden="true">🐟</span>Peces
+            </button>
+            <button type="button" class="pestana" role="tab" aria-selected="false" aria-controls="cuadricula" data-categoria="anfibio">
+                <span class="pestana-icono" aria-hidden="true">🐸</span>Anfibios
+            </button>
+            <button type="button" class="pestana" role="tab" aria-selected="false" aria-controls="cuadricula" data-categoria="reptil">
+                <span class="pestana-icono" aria-hidden="true">🦎</span>Reptiles
+            </button>
+            <button type="button" class="pestana" role="tab" aria-selected="false" aria-controls="cuadricula" data-categoria="invertebrado">
+                <span class="pestana-icono" aria-hidden="true">🦐</span>Invertebrados
+            </button>
+        </div>
+
+        <div id="cuadricula" class="tarjetas-grid" role="tabpanel">
             <!-- JavaScript inyectará las tarjetas aquí -->
         </div>
     </div>
