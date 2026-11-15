@@ -52,7 +52,7 @@ body.fondo-general {
         radial-gradient(ellipse at 15% 10%, rgba(34, 211, 238, 0.16), transparent 55%),
         radial-gradient(ellipse at 85% 90%, rgba(16, 185, 129, 0.14), transparent 55%),
         linear-gradient(180deg, rgba(3, 12, 20, 0.78), rgba(3, 12, 20, 0.92)),
-        url('imagenes/fondo.webp'); /* PLACEHOLDER: fondo general */
+        url('imagenes/fondo-inicio.webp'); /* PLACEHOLDER: fondo general */
 }
 
 /* Acuático */
