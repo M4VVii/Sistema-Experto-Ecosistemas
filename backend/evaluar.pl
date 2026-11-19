@@ -5,8 +5,6 @@
 %  Uso (lo invoca servidor.py):
 %      swipl -q -g "evaluar_json([pez_oscar, pez_guppy], tanque(acuatico, litros(600)))" \
 %            -t halt evaluar.pl
-%
-%  Colocalo junto a servidor.py y a la carpeta 'conocimiento/'.
 % ==============================================================================
 
 :- use_module(library(http/json)).
