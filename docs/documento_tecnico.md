@@ -2,7 +2,7 @@
   <table>
     <tr>
       <td align="center" valign="middle">
-        <img src="img/ipn.webp" alt="Logo IPN" width="100">
+        <img src="../logos/ipn.webp" alt="Logo IPN" width="100">
       </td>
       <td align="center" valign="middle">
         <strong>INSTITUTO POLITÉCNICO NACIONAL</strong><br>
@@ -12,7 +12,7 @@
         Docente: Morales Rodriguez Ursula Samantha
       </td>
       <td align="center" valign="middle">
-        <img src="img/escom.webp" alt="Logo ESCOM" width="140">
+        <img src="../logos/escom.webp" alt="Logo ESCOM" width="140">
       </td>
     </tr>
   </table>
@@ -66,30 +66,33 @@ El servidor en Python se encarga únicamente del protocolo HTTP (CORS, validaci�
 
 ### 2.1. Estructura del repositorio
 
-```
-arquitecto-ecosistemas/
-├── backend/
-│   ├── conocimiento/
-│   │   ├── consultas.pl       # Orquestador y diagnóstico
-│   │   ├── hechos.pl          # Base de conocimientos (24 especies)
-│   │   └── reglas.pl          # Reglas de conflicto
-│   ├── .dockerignore          # Excluye venv/ y __pycache__/ de la imagen
-│   ├── Dockerfile             # Imagen del backend (Python 3.11 + SWI-Prolog)
-│   ├── evaluar.pl             # Puente Prolog → JSON
-│   ├── requirements.txt       # Dependencias de Python
-│   └── servidor.py            # API REST (Flask)
-├── docs/
-│   ├── img/                   # Logos institucionales (escom.webp, ipn.webp)
-│   ├── casos_de_prueba.md     # Catálogo de pruebas
-│   └── documento_tecnico.md   # Este documento
-├── frontend/
-│   ├── imagenes/              # Fondos dinámicos e imágenes de las especies (.webp)
-│   ├── app.js                 # Lógica del cliente
-│   ├── config.js              # URL de la API
-│   ├── index.html             # Estructura de la interfaz
-│   └── styles.css             # Estilos (tema Bio-Tech, glassmorphism)
-├── .gitignore                 # Excluye venv/ y __pycache__/
-└── README.md                  # Documentación principal del repositorio
+```text
+📦 arquitecto-ecosistemas
+ ┣ 📂 backend/
+ ┃ ┣ 📂 conocimiento/
+ ┃ ┃ ┣ 📜 hechos.pl          # Base de conocimientos (24 especies, parámetros)
+ ┃ ┃ ┣ 📜 reglas.pl          # Reglas lógicas de compatibilidad e inferencia
+ ┃ ┃ ┗ 📜 consultas.pl       # Orquestador y diagnóstico (diagnostico/3)
+ ┃ ┣ 📜 .dockerignore        # Exclusiones para el contenedor
+ ┃ ┣ 📜 Dockerfile           # Contenedor para despliegue (Python + SWI-Prolog)
+ ┃ ┣ 📜 evaluar.pl           # Puente Prolog → JSON
+ ┃ ┣ 📜 requirements.txt     # Dependencias de Python
+ ┃ ┗ 📜 servidor.py          # API REST (Flask + Gunicorn)
+ ┣ 📂 frontend/
+ ┃ ┣ 📂 imagenes/            # Recursos visuales (.webp/.jpg)
+ ┃ ┣ 📜 index.html           # Interfaz de usuario
+ ┃ ┣ 📜 styles.css           # Estilos de la interfaz
+ ┃ ┣ 📜 app.js               # Lógica de cliente y Fetch API
+ ┃ ┗ 📜 config.js            # Variables de entorno y URL del servidor
+ ┣ 📂 docs/
+ ┃ ┣ 📂 evidencias/          # Capturas de ejecución (Prolog, API y Web)
+ ┃ ┣ 📜 casos_de_prueba.md   # Pruebas documentadas
+ ┃ ┣ 📜 documento_tecnico.md # Entregable escrito
+ ┃ ┗ 📜 presentacion.pdf     # Diapositivas de exposición
+ ┣ 📂 logos/                 # Logos institucionales (IPN, ESCOM)
+ ┣ 📜 LICENSE                # Licencia MIT del proyecto
+ ┣ 📜 .gitignore             # Exclusión de archivos basura
+ ┗ 📜 README.md              # Documentación principal
 ```
 
 ### 2.2. Tecnologías

@@ -1,10 +1,27 @@
 <div align="center">
 
-# 🌍 Sistema Experto: Arquitecto de Ecosistemas (Acuarios, Terrarios y Paludarios)
+# 🌍 Arquitecto de Ecosistemas (Acuarios, Terrarios y Paludarios)
 
-**Práctica integradora 1er Parcial - Paradigmas de Programación**  
-**Escuela Superior de Cómputo (ESCOM) - IPN**
+</div>
 
+<div align="center">
+  <table>
+    <tr>
+      <td align="center" valign="middle">
+        <img src="logos/ipn.webp" alt="Logo IPN" width="100">
+      </td>
+      <td align="center" valign="middle">
+        <strong>INSTITUTO POLITÉCNICO NACIONAL</strong><br>
+        <strong>ESCUELA SUPERIOR DE CÓMPUTO</strong><br><br>
+        Ingeniería en Inteligencia Artificial<br>
+        Paradigmas de Programación — Práctica Sistema Experto Prolog<br>
+        Semestre: 2027-1<br>
+      </td>
+      <td align="center" valign="middle">
+        <img src="logos/escom.webp" alt="Logo ESCOM" width="140">
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div align="justify">
@@ -44,17 +61,20 @@ El sistema tiene una arquitectura híbrida (Python + Prolog) que separa claramen
  ┃ ┣ 📜 evaluar.pl           # Puente Prolog → JSON
  ┃ ┣ 📜 requirements.txt     # Dependencias de Python
  ┃ ┗ 📜 servidor.py          # API REST (Flask + Gunicorn)
- ┣ 📂 frontend/ 
+ ┣ 📂 frontend/
  ┃ ┣ 📂 imagenes/            # Recursos visuales (.webp/.jpg)
  ┃ ┣ 📜 index.html           # Interfaz de usuario
  ┃ ┣ 📜 styles.css           # Estilos de la interfaz
  ┃ ┣ 📜 app.js               # Lógica de cliente y Fetch API
  ┃ ┗ 📜 config.js            # Variables de entorno y URL del servidor
- ┣ 📂 docs/ 
- ┃ ┣ 📂 img/                 # Evidencias visuales
+ ┣ 📂 docs/
+ ┃ ┣ 📂 evidencias/          # Capturas de ejecución (Prolog, API y Web)
  ┃ ┣ 📜 casos_de_prueba.md   # Pruebas documentadas
- ┃ ┗ 📜 documento_tecnico.md # Entregable escrito
- ┣ 📜 .gitignore             # Exclusión de archivos basura
+ ┃ ┣ 📜 documento_tecnico.md # Entregable escrito
+ ┃ ┗ 📜 presentacion.pdf     # Diapositivas de exposición
+ ┣ 📂 logos/                 # Logos institucionales (IPN, ESCOM)
+ ┣ 📜 LICENSE                # Licencia MIT del proyecto
+ ┣ 📜 .gitignore             # Exclusión de archivos
  ┗ 📜 README.md              # Documentación principal
 ```
 

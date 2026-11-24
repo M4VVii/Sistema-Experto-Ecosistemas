@@ -2,7 +2,7 @@
   <table>
     <tr>
       <td align="center" valign="middle">
-        <img src="img/ipn.webp" alt="Logo IPN" width="100">
+        <img src="../logos/ipn.webp" alt="Logo IPN" width="100">
       </td>
       <td align="center" valign="middle">
         <strong>INSTITUTO POLITÉCNICO NACIONAL</strong><br>
@@ -12,7 +12,7 @@
         Docente: Morales Rodriguez Ursula Samantha
       </td>
       <td align="center" valign="middle">
-        <img src="img/escom.webp" alt="Logo ESCOM" width="140">
+        <img src="../logos/escom.webp" alt="Logo ESCOM" width="140">
       </td>
     </tr>
   </table>
@@ -96,15 +96,15 @@ Respuesta esperada: HTTP 200 con `"viable": true` y `"conflictos": []`.
 Resultado: mensaje central "Ecosistema Viable" (verde) y un monitor principal "Ecosistema estable" con 0 conflictos.
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 1 (motor)](./img/caso-motor-01.webp)
+![Captura del caso 1 (motor)](./evidencias/caso-motor-01.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 1 (API)](./img/caso-api-01.webp)
+> **Evidencia (API):**  
+![Captura del caso 1 (API)](./evidencias/caso-api-01.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 1 (web)](./img/caso-web-01.webp)
+![Captura del caso 1 (web)](./evidencias/caso-web-01.webp)
 
 ### Caso de Prueba 2: Terrario tropical húmedo
 * **Objetivo:** Verificar que el sistema acepta un terrario con especies terrestres tropicales de distinta clase (anfibio y reptil) y que ignora el pH (valor `na`) al evaluar especies terrestres puras.
@@ -141,15 +141,15 @@ Respuesta esperada: HTTP 200 con `"viable": true` y `"conflictos": []`.
 Resultado: "Ecosistema Viable" (verde) y un monitor principal "Ecosistema estable" con 0 conflictos.
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 2 (motor)](./img/caso-motor-0.webp)
+![Captura del caso 2 (motor)](./evidencias/caso-motor-02.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 2 (API)](./img/caso-api-02.webp)
+> **Evidencia (API):**  
+![Captura del caso 2 (API)](./evidencias/caso-api-02.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 2 (web)](./img/caso-web-02.webp)
+![Captura del caso 2 (web)](./evidencias/caso-web-02.webp)
 
 ### Caso de Prueba 3: Paludario con zona acuática y terrestre
 * **Objetivo:** Verificar el manejo de una especie de hábitat `mixto` (que exige pH y humedad) combinada con una especie acuática pura (humedad `na`), validando que cada parámetro se evalúa solo donde aplica.
@@ -187,15 +187,15 @@ Respuesta esperada: HTTP 200 con `"viable": true` y `"conflictos": []`.
 Resultado: "Ecosistema Viable" (verde) y un monitor principal "Ecosistema estable" con 0 conflictos.
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 3 (motor)](./img/caso-motor-03.webp)
+![Captura del caso 3 (motor)](./evidencias/caso-motor-03.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 3 (API)](./img/caso-api-03.webp)
+> **Evidencia (API):**  
+![Captura del caso 3 (API)](./evidencias/caso-api-03.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 3 (web)](./img/caso-web-03.webp)
+![Captura del caso 3 (web)](./evidencias/caso-web-03.webp)
 
 ### Caso de Prueba 4: Óscar y guppy
 * **Objetivo:** Verificar que el sistema detecta un conflicto de depredación cuando un pez grande comparte tanque con uno que cabe en su boca, aunque temperatura, pH y espacio sean compatibles.
@@ -230,15 +230,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y un conflicto: `"Riesgo de d
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal "Ecosistema no viable" y un monitor de alerta "Depredación".
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 4 (motor)](./img/caso-motor-04.webp)
+![Captura del caso 4 (motor)](./evidencias/caso-motor-04.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 4 (API)](./img/caso-api-04.webp)
+> **Evidencia (API):**  
+![Captura del caso 4 (API)](./evidencias/caso-api-04.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 4 (web)](./img/caso-web-04.webp)
+![Captura del caso 4 (web)](./evidencias/caso-web-04.webp)
 
 ### Caso de Prueba 5: Ajolote y camarón cereza
 * **Objetivo:** Verificar que la detección de depredación funciona también con un anfibio acuático y un invertebrado, y que no depende de que ambos sean peces.
@@ -273,15 +273,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y un conflicto: `"Riesgo de d
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal "Ecosistema no viable" y un monitor de alerta "Depredación".
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 5 (motor)](./img/caso-motor-05.webp)
+![Captura del caso 5 (motor)](./evidencias/caso-motor-05.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 5 (API)](./img/caso-api-05.webp)
+> **Evidencia (API):**  
+![Captura del caso 5 (API)](./evidencias/caso-api-05.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 5 (web)](./img/caso-web-05.webp)
+![Captura del caso 5 (web)](./evidencias/caso-web-05.webp)
 
 ### Caso de Prueba 6: Betta y cíclido convicto
 * **Objetivo:** Verificar que el sistema detecta un conflicto por agresión o territorialidad entre un pez territorial y uno agresivo, aunque el tanque sea amplio y los parámetros coincidan.
@@ -315,15 +315,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y un conflicto: `"Conflicto p
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal "Ecosistema no viable" y un monitor de alerta "Agresión / territorio".
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 6 (motor)](./img/caso-motor-06.webp)
+![Captura del caso 6 (motor)](./evidencias/caso-motor-06.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 6 (API)](./img/caso-api-06.webp)
+> **Evidencia (API):**  
+![Captura del caso 6 (API)](./evidencias/caso-api-06.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 6 (web)](./img/caso-web-06.webp)
+![Captura del caso 6 (web)](./evidencias/caso-web-06.webp)
 
 ### Caso de Prueba 7: Uromastyx y anolis verde
 * **Objetivo:** Verificar que el sistema rechaza la mezcla de una especie desértica con una tropical cuando la temperatura sí coincide pero la humedad no, y que además detecta que una de las especies no pertenece al hábitat del terrario.
@@ -360,15 +360,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y **dos** conflictos: `"Espec
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal con 2 conflictos y dos monitores de alerta: "Hábitat" y "Químico".
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 7 (motor)](./img/caso-motor-07.webp)
+![Captura del caso 7 (motor)](./evidencias/caso-motor-07.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 7 (API)](./img/caso-api-07.webp)
+> **Evidencia (API):**  
+![Captura del caso 7 (API)](./evidencias/caso-api-07.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 7 (web)](./img/caso-web-07.webp)
+![Captura del caso 7 (web)](./evidencias/caso-web-07.webp)
 
 ### Caso de Prueba 8: Iguana verde y salamandra tigre
 * **Objetivo:** Verificar que el sistema detecta un choque de temperaturas (rangos sin intersección) aunque la humedad y el espacio sean compatibles.
@@ -404,15 +404,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y un conflicto: `"Incompatibi
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal "Ecosistema no viable" y un monitor de alerta "Temperatura".
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 8 (motor)](./img/caso-motor-08.webp)
+![Captura del caso 8 (motor)](./evidencias/caso-motor-08.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 8 (API)](./img/caso-api-08.webp)
+> **Evidencia (API):**  
+![Captura del caso 8 (API)](./evidencias/caso-api-08.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 8 (web)](./img/caso-web-08.webp)
+![Captura del caso 8 (web)](./evidencias/caso-web-08.webp)
 
 ### Caso de Prueba 9: Acuario comunitario sobrepoblado
 * **Objetivo:** Verificar que el sistema detecta hacinamiento por la suma de espacios mínimos cuando todas las especies son pacíficas y sus parámetros son compatibles.
@@ -447,15 +447,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y un conflicto: `"Falta de es
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal "Ecosistema no viable" y un monitor de alerta "Espacio" (con "Todas las especies").
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 9 (motor)](./img/caso-motor-09.webp)
+![Captura del caso 9 (motor)](./evidencias/caso-motor-09.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 9 (API)](./img/caso-api-09.webp)
+> **Evidencia (API):**  
+![Captura del caso 9 (API)](./evidencias/caso-api-09.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 9 (web)](./img/caso-web-09.webp)
+![Captura del caso 9 (web)](./evidencias/caso-web-09.webp)
 
 ### Caso de Prueba 10: Terrario desértico reducido
 * **Objetivo:** Verificar que el sistema detecta hacinamiento en un terrario, incluso cuando el área ya es insuficiente para la especie más exigente por sí sola.
@@ -491,15 +491,15 @@ Respuesta esperada: HTTP 200 con `"viable": false` y un conflicto: `"Falta de es
 Resultado: "Conflictos Encontrados" (rojo), un monitor principal "Ecosistema no viable" y un monitor de alerta "Espacio" (con "Todas las especies").
 
 > **Evidencia (motor Prolog):**  
-![Captura del caso 10 (motor)](./img/caso-motor-10.webp)
+![Captura del caso 10 (motor)](./evidencias/caso-motor-10.webp)
 
 >
-> **Evidencia (API, opcional):**  
-![Captura del caso 10 (API)](./img/caso-api-10.webp)
+> **Evidencia (API):**  
+![Captura del caso 10 (API)](./evidencias/caso-api-10.webp)
 
 >
 > **Evidencia (interfaz web):**  
-![Captura del caso 10 (web)](./img/caso-web-10.webp)
+![Captura del caso 10 (web)](./evidencias/caso-web-10.webp)
 
 ## Pruebas de la API (validación de entradas)
 
@@ -562,11 +562,11 @@ curl -s -o /dev/null -w 'HTTP %{http_code}\n' "$API"
 En PA-5 y PA-7 se comprueba además que el texto enviado nunca se ejecuta: el servidor lo rechaza antes de invocar a Prolog.
 
 > **Evidencia (Pruebas API):**  
-![Captura del caso 10 (motor)](./img/prueba-01.webp)
+![Captura del caso 10 (motor)](./evidencias/prueba-01.webp)
 
 >
 > **Evidencia (Pruebas API):**  
-![Captura del caso 10 (API)](./img/prueba-02.webp)
+![Captura del caso 10 (API)](./evidencias/prueba-02.webp)
 
 ## Notas
 
